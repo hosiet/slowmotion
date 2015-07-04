@@ -4,6 +4,6 @@
 
 ## 培训记录
 
-[电路部分](notes/circult.md)
-[电机与电源部分](notes/driver_power.md)
+- [电路部分](notes/circult.md)
+- [电机与电源部分](notes/driver_power.md)
 
