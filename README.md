@@ -6,4 +6,6 @@
 
 - [电路部分](notes/circult.md)
 - [电机与电源部分](notes/driver_power.md)
+- [机械结构](notes/structure.md)
+- [机械加工](notes/structure-2.md)
 
