@@ -9,4 +9,11 @@ https://hosiet.me/cgi-bin/piup-report.cgi?token=e311c41b6f47ac74398821ed1300ccce
 
 以上内容已经完成。
 
+## 使用 pi-blaster 输出 PWM 波
+
+没什么可说的。
+
+## 乐曲格式（V1）
+
+待定
 
