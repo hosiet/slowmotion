@@ -9,6 +9,8 @@ import sys, os
 import select
 import tty
 import termios
+import time
+import multiprocessing
 
 # 键值数值标记
 keyboard_data = {\
@@ -21,19 +23,28 @@ keyboard_data = {\
         2: {'low':0.19, 'high':0.24, 'gpio':17, 'time':0.14},\
         1: {'low':0.18, 'high':0.22, 'gpio':4,  'time':0.12}}
 
+# 确认是树莓派平台
+#is_under_pi = False
+is_upder_pi = True
 
 def kp_play_note_once(inputnote):
     """
     Play a note once a time.
     """
     print('{0} pressed; Will play: {1}.'.format(inputnote, keyboard_data[inputnote]))
-    pass
+    if not is_under_pi:
+        return
+    os.system('echo {0}={1} >> /dev/pi-blaster'.format(keyboard_data[inputnote]['gpio'], keyboard_data[inputnote]['low']))
+    time.sleep(keyboard_data[inputnote]['time'])
+    os.system('echo {0}={1} >> /dev/pi-blaster'.format(keyboard_data[inputnote]['gpio'], keyboard_data[inputnote]['high']))
+    # May be improved later? Don't use os.system (TODO)
+    return
 
 def kp_start_playing():
     """
     Non-stop play the note using keyboard.
 
-    Use 'c' to stop.
+    Use ESC to stop.
     """
     def isData():
         return select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], [])
@@ -46,9 +57,10 @@ def kp_start_playing():
             if not isData():
                 c = sys.stdin.read(1)
                 if c >= '1' and c <= '8':
-                    # Valid input
-                    kp_play_note_once(int(c))
-                    #kp_play_note((int(c),))
+                    # Valid input, use multiprocessing to prevent problem?
+                    p = multiprocessing.Process(target=kp_play_note_once, args=(int(c),))
+                    p.start()
+                    # Never join!
                     continue
                 elif c == '\x1b': # ESC
                     break

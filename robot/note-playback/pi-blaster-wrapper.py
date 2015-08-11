@@ -7,19 +7,6 @@ pi-blaster-wrapper.py -- A pi-blaster wrapper
 Used to wrap pi-blaster use.
 """
 
-## CONFIG FOR PI-BLASTER USE
-
-PI_BLASTER_NOTE =  \
-        {'1': '17',\
-         '2': '18',\
-         '3': '19',\
-         '4': '20',\
-         '5': '21',\
-         '6': '22',\
-         '7': '23',\
-         '8': '24' \
-        };
-
 ## MAIN FUNCTIONS
 
 def note_playback_hard(number):
