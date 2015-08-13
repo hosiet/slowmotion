@@ -24,8 +24,8 @@ keyboard_data = {\
         1: {'low':0.18, 'high':0.22, 'gpio':4,  'time':0.12}}
 
 # 确认是树莓派平台
-#is_under_pi = False
-is_under_pi = True
+is_under_pi = False
+#is_under_pi = True
 
 def kp_play_note_once(inputnote):
     """
