@@ -38,7 +38,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
         return
 
 if __name__ == "__main__":
-    HOST, PORT = "localhost", 9999
+    HOST, PORT = "0.0.0.0", 9999
 
     # Create server and Bind to port
     server = socketserver.TCPServer((HOST, PORT), MyTCPInfoHandler)
