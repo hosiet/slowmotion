@@ -19,7 +19,7 @@ keyboard_data = {\
         6: {'low':0.19, 'high':0.25, 'gpio':23, 'time':0.14},\
         5: {'low':0.17, 'high':0.20, 'gpio':22, 'time':0.14},\
         4: {'low':0.19, 'high':0.22, 'gpio':21, 'time':0.14},\
-        3: {'low':0.16, 'high':0.22, 'gpio':18, 'time':0.14},\
+        3: {'low':0.19, 'high':0.23, 'gpio':18, 'time':0.14},\
         2: {'low':0.19, 'high':0.22, 'gpio':17, 'time':0.14},\
         1: {'low':0.18, 'high':0.22, 'gpio':4,  'time':0.12}}
 
