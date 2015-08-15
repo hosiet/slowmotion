@@ -31,6 +31,16 @@ def kp_play_note_once(inputnote):
     """
     Play a note once a time.
     """
+    if inputnote == 0:
+        # Release all!
+        pass
+        count = 0
+        while count < 8:
+            count += 1
+            os.system('echo "release {}" >> /dev/pi-blaster'.format(keyboard_data[count]['gpio']))
+        print('All released.')
+        return
+
     print('{0} pressed; Will play: {1}.'.format(inputnote, keyboard_data[inputnote]))
     if not is_under_pi:
         return
@@ -56,8 +66,9 @@ def kp_start_playing():
         while True:
             if not isData():
                 c = sys.stdin.read(1)
-                if c >= '1' and c <= '8':
+                if c >= '0' and c <= '8':
                     # Valid input, use multiprocessing to prevent problem?
+                    # 0 means release
                     p = multiprocessing.Process(target=kp_play_note_once, args=(int(c),))
                     p.start()
                     # Never join!
