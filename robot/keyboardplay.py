@@ -32,12 +32,16 @@ def kp_play_note_once(inputnote):
     Play a note once a time.
     """
     if inputnote == 0:
-        # Release all!
+        # Do nothing
+        return
+    if inputnote == 9:
+        # Return to upright position
         pass
         count = 0
         while count < 8:
             count += 1
-            os.system('echo "release {}" >> /dev/pi-blaster'.format(keyboard_data[count]['gpio']))
+            os.system('echo {0}={1} >> /dev/pi-blaster'.format(keyboard_data[count]['gpio'], keyboard_data[count]['high']))
+            time.sleep(keyboard_data[count]['time'])
         print('All released.')
         return
 
