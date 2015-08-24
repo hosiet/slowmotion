@@ -1,0 +1,691 @@
+<html><head>
+<title>GameDev.net -- Beat Detection Algorithms</title>
+<meta name="Keywords" content="game development, game programming, game jobs, video game jobs, games jobs, graphics programming, OpenGL, DirectX, Direct3D, AI, artificial intelligence, game design, game, gamedev, development, programming, c++, games, program, create, design, gouraud, shading, tutorial, art, gdnet">
+<meta name="Description" content="Gamedev.net is the leading resource for game developers, featuring daily news updates, over 1500 featured articles and tutorials, and the most active game development forums anywhere!"> 
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="stylesheet" type="text/css" href="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/theme.css">
+<script src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/ga.js" async="" type="text/javascript"></script><script type="text/javascript" src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/google_service.js"></script>
+<script type="text/javascript">
+  GS_googleAddAdSenseService("ca-pub-3167291168602081");
+  GS_googleEnableAllServices();
+</script><script src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/google_ads.js"></script>
+<script type="text/javascript">
+GA_googleAddSlot("ca-pub-3167291168602081", "Skyscraper_Main");
+GA_googleAddSlot("ca-pub-3167291168602081", "Banner_Main");
+GA_googleAddSlot("ca-pub-3167291168602081", "Button_FrontPage");
+</script>
+<script type="text/javascript">
+  GA_googleFetchAds();
+</script>
+<!--[if IE]>
+<style>
+.source {background: #ffffff; border: solid 2px; font-family: Courier New; color: black; font-size: 9pt; width: 95%; height: 250px; overflow: auto; padding: 3px;}
+</style>
+<script type="text/javascript" src="/include/menu.js"></script>
+<![endif]-->
+<script type="text/javascript">
+var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-279474-1']); _gaq.push(['_trackPageview']);
+(function () {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+</head>
+<body>
+<div id="header">
+<div class="logo"><a href="http://archive.gamedev.net/archive/index.html"></a></div>
+<div class="sponsor"></div>
+<div class="banner">
+<script type="text/javascript">
+GA_googleFillSlot("Banner_Main");
+</script><script src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/ads_002"></script></div>
+<div class="nav"><ul id="lw_menu">
+<li id="l1f">Features
+<ul>
+<li id="l2fa"><a href="http://archive.gamedev.net/archive/gamejobs/index.html">Game Jobs</a></li>
+<li id="l2fb"><a href="http://archive.gamedev.net/archive/features/reviews/index.html">Product Reviews</a></li>
+<li id="l2fc"><a href="http://archive.gamedev.net/archive/community/contest/index.html">Contests</a></li>
+<li id="l2fd"><a href="http://archive.gamedev.net/archive/community/gds/index.html">GD Showcase</a></li>
+<li id="l2fe"><a href="http://archive.gamedev.net/archive/info/newsletter.html">Newsletter</a></li>
+</ul>
+</li>
+<li id="l1r">Resources
+<ul>
+<li id="l2ra"><a href="http://archive.gamedev.net/archive/reference/index.html">Articles &amp; Resources</a></li>
+<li id="l2rb"><a href="http://archive.gamedev.net/archive/columns/index.html">Columns</a></li>
+<li id="l2rc"><a href="http://archive.gamedev.net/archive/columns/books/index.html">Books</a></li>
+<li id="l2rd"><a href="http://archive.gamedev.net/archive/reference/start_here/index.html">For Beginners</a></li>
+<li id="l2re"><a href="http://archive.gamedev.net/archive/dict/index.html">Game Dictionary</a></li>
+<li id="l2rf"><a href="http://wiki.gamedev.net/">Wiki</a></li>
+</ul>
+</li>
+<li id="l1c">Community
+<ul>
+<li id="l2ca"><a href="http://archive.gamedev.net/archive/community/forums/index.html">Forums</a></li>
+<li id="l2cb"><a href="http://archive.gamedev.net/community/gathering/">GD Gathering</a></li>
+<li id="l2cc"><a href="http://archive.gamedev.net/archive/community/chat/index.html">Online Chat</a></li>
+<li id="l2cd"><a href="http://archive.gamedev.net/archive/community/forums/index0433.html?cid=17,11&amp;nofavs=t">Workshops</a></li>
+</ul>
+</li>
+<li id="l1m">Members
+<ul>
+<li id="l2ma"><a href="http://archive.gamedev.net/archive/community/forums/logincheckd41d.html">Control Panel</a></li>
+<li id="l2mb"><a href="http://archive.gamedev.net/archive/subscribe/index.html">GDNet+ Signups</a></li>
+<li id="l2mc"><a href="http://archive.gamedev.net/archive/community/journals/index.html">Developer Journals</a></li>
+<li id="l2md"><a href="http://archive.gamedev.net/profile/">Member Search</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<script language="Javascript">
+	startList();
+</script>
+<div class="leftcolumn">	
+			<div id="CMS_Options">
+				<div id="CMS_Features">
+				  <div class="boxContentHeadr_MM">
+				  	<div class="boxContentHeadr_Title">Features</div>
+				  </div>
+				  <div class="boxContent_MM">
+			          <a href="http://archive.gamedev.net/archive/gamejobs/index.html">Game Jobs</a><br>
+			          <a href="http://archive.gamedev.net/archive/features/reviews/index.html">Product Reviews</a><br>
+			          <a href="http://archive.gamedev.net/archive/community/contest/index.html">Contests</a><br>
+			          <a href="http://archive.gamedev.net/archive/community/gds/index.html">GD Showcase</a><br>
+			          <a href="http://archive.gamedev.net/archive/info/newsletter.html">Newsletter</a><br>
+			          <a href="http://archive.gamedev.net/archive/info/media/index.html">Advertise with Us</a><br>
+			          <a href="http://archive.gamedev.net/archive/info/about/index.html">About Us</a>
+				  </div>
+				</div>	
+				<div id="CMS_Resources">
+				  <div class="boxContentHeadr_MM">
+				  	<div class="boxContentHeadr_Title">Resources</div>
+				  </div>
+				  <div class="boxContent_MM">
+			          <a href="http://archive.gamedev.net/archive/reference/index.html">Articles &amp; Resources</a><br>
+			          <a href="http://archive.gamedev.net/archive/columns/index.html">Columns</a><br>
+			          <a href="http://archive.gamedev.net/archive/columns/books/index.html">Books</a><br>
+			          <a href="http://archive.gamedev.net/archive/reference/start_here/index.html">For Beginners</a><br>
+			          <a href="http://archive.gamedev.net/archive/dict/index.html">Game Dictionary</a><br>
+			          <a href="http://wiki.gamedev.net/">Wiki</a><br>
+			          <a href="http://archive.gamedev.net/archive/info/writers.html">Write For Us</a>
+				  </div>
+				</div>	
+				<div id="CMS_Community">
+				  <div class="boxContentHeadr_MM">
+				  	<div class="boxContentHeadr_Title">Community</div>
+				  </div>
+				  <div class="boxContent_MM">
+			          <a href="http://archive.gamedev.net/archive/community/forums/index.html">Forums</a><br>
+			          <a href="http://archive.gamedev.net/community/gathering/">GD Gathering</a><br>
+			          <a href="http://archive.gamedev.net/archive/community/chat/index.html">Online Chat</a><br>
+			          <a href="http://archive.gamedev.net/archive/community/forums/index0433.html?cid=17,11&amp;nofavs=t">Workshops</a><br>
+				  </div>
+				</div>	
+				<div id="CMS_Members">
+				  <div class="boxContentHeadr_MM">
+				  	<div class="boxContentHeadr_Title">Members</div>
+				  </div>			  
+				  <div class="boxContent_MM">
+			          <a href="http://archive.gamedev.net/archive/community/forums/logincheckd41d.html">Control Panel</a><br>
+			          <a href="http://archive.gamedev.net/archive/subscribe/index.html">GDNet+ Signups!</a><br>
+			          <a href="http://archive.gamedev.net/archive/community/journals/index.html">Developer Journals</a><br>
+			          <a href="http://archive.gamedev.net/profile/">Member Search</a><br>
+				  </div>
+				</div>	
+			</div>
+			
+			<div id="FP_Events" class="roundedBox" style="width: 98%;">
+					<div class="boxCorners"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/int_rtcr.gif" class="boxLeft" height="8" width="7"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/int_ltcr.gif" height="8" width="7"></div>
+						<div class="boxContentHeadr">Upcoming Events</div>
+						<div class="boxContent">
+<img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/dotsm-blue.gif" height="6" width="7"><a href="http://archive.gamedev.net/archive/directory/events/index0bcc.html?method=se&amp;eid=567">Unite 2010</a><br><span class="events_date">11/10 - 11/12 @ Montréal, Canada</span><br><br><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/dotsm-blue.gif" height="6" width="7"><a href="http://archive.gamedev.net/archive/directory/events/index65f0.html?method=se&amp;eid=563">GDC China</a><br><span class="events_date">12/5 - 12/7 @ Shanghai, China</span><br><br><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/dotsm-blue.gif" height="6" width="7"><a href="http://archive.gamedev.net/archive/directory/events/indexf471.html?method=se&amp;eid=557">Asia Game Show 2010</a><br><span class="events_date">12/24 - 12/27&nbsp;&nbsp;</span><br><br><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/dotsm-blue.gif" height="6" width="7"><a href="http://archive.gamedev.net/archive/directory/events/indexf7c7.html?method=se&amp;eid=562">GDC 2011</a><br><span class="events_date">2/28 - 3/4 @ San Francisco, CA</span><br><br><a href="http://archive.gamedev.net/archive/directory/events/index.html">More events...</a>
+						</div>
+			</div>		
+	
+			<div id="FP_Stats" class="roundedBox" style="width: 98%;">
+					<div class="boxCorners"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/int_rtcr.gif" class="boxLeft" height="8" width="7"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/int_ltcr.gif" height="8" width="7"></div>
+						<div class="boxContentHeadr">Quick Stats</div>
+						<div class="boxContent">
+
+						<span class="stats_bold">94</span> people currently visiting GDNet.<br>
+						<span class="stats_bold">2406</span> articles in the reference section.<br>
+						<br>
+						<a href="http://www.grid.org/services/teams/team.htm?id=FD181524-CCD8-4DAA-A4EC-499F0DB09AD2">Help us fight cancer!</a><br>
+						<a href="http://setiathome.berkeley.edu/team_display.php?teamid=31384">Join SETI Team GDNet!</a>
+						</div>
+
+			</div>			
+
+			<!-- MICROBUTTON ADVERT FOR PARTNER SITES -->		
+			<div id="FP_PartnerButton" align="center">
+<a href="http://archive.gamedev.net/archive/index.html"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/gdnet-88x31.gif" alt="Link to us" height="31" width="88" border="0"></a>
+<a href="http://eventsforgamers.com/"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/eventsforgamers.gif" alt="Events 4 Gamers" height="31" width="88" border="0"></a>
+<script type="text/javascript">
+GA_googleFillSlot("Button_FrontPage");
+</script><script src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/ads_003"></script>
+			</div>
+			
+</div>
+
+<div id="centercolumn_2col">
+<div class="centerpadding">
+
+
+<div class="contextNav">
+<div class="hdrbreadcrumbs"></div>
+    <div class="hdrSearchBox"><form action="http://archive.gamedev.net/community/forums/search.asp">
+        <img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/search_sponsor.png" alt="Intel"> sponsors gamedev.net search:
+        <input size="20" name="terms" class="searchinput" type="text">
+        <input src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/hdr3srchbtn.gif" class="searchbutton" type="image">
+        <input name="area" value="site" type="hidden">
+    </form></div>
+</div>
+
+
+<script language="JavaScript">
+function popupsource(file) {
+  var helpWin = window.open(file,"Code","status=no,scrollbars=no,width=600,height=460");
+}
+</script>
+
+
+<p align="center"><a href="http://archive.gamedev.net/archive/reference/programming/features/beatdetection/index.html"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/beat.png" alt="" border="0"></a>
+
+
+<table cellpaddign="0" width="100%" border="0" cellspacing="0"><tbody><tr><td>
+
+
+
+<p align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/image002.png" alt="" height="260" width="570" border="0"></p>
+
+<h1>Disclaimer</h1>
+<p>This document is to be distributed for free and without any 
+modification from its original state. The author declines all 
+responsibility in the damage this document or any of the things you will
+ do with it might do to anyone or to anything. This document and any of 
+its contents is not copyrighted and is free of all rights, you may thus 
+use it, modify it or destroy it without breaking any international law. 
+However according to the author's will, you may not use this document 
+for commercial profit directly, but you may use indirectly its 
+intellectual contents; in which case I would be pleased to receive a 
+mail of notice or even thanks. This is my first tutorial and I am still a
+ student, you must assume that this document is probably not free of 
+small errors and bugs. In the same state of mind, those algorithms are 
+not fully optimised, they are explained for pedagogical purposes and you
+ may find some redundant computations or other voluntary clumsiness. 
+Please be indulgent and self criticise everything you might read. 
+Hopefully, lots of this stuff was taken in sources and books of 
+reference; as for the stuff I did: it has proven some true efficiency in
+ test programs I made and which work as wanted. As said in the 
+introduction: If you have any question or any comment about this text, 
+please send it to the above email address, I'll be happy to answer as 
+soon as possible.</p>
+
+<h1>Introduction</h1>
+<p>Simulating a physical phenomena which obeys to known mathematical 
+equations is, with a number of approximations, always feasable. But what
+ about more abstract concepts, such as feelings, which do not follow any
+ laws? The simplest things we can feel are often the hardest things to 
+capture in a program. Beat detection follows this rule : feeling the 
+beat of a song comes naturally to humans or animals. Indeed it is only a
+ feeling one gets when listening to a melody, a feeling which will make 
+you dance in rhythm or hit a table with your hands on the melody beats. 
+Therefore, how can we teach this beat detection to a machine that can 
+only compute logical operations? In fact there are a number of 
+algorithms which manage to approximate, more or less accurately, this 
+beat detection. We will first study the statistical approach of beat 
+detection on a streaming source and secondly a filtering approach of 
+rhythm extraction on a static song.</p>
+<p>This guide assumes the reader has basic signal processing 
+understanding (FFT, convolutions and correlations should sound common) 
+maybe some stuff in statistics will also help (Variance, Average, 
+Principal Components Analysis, will be quoted among others). The point 
+here is not to actually write the code of these algorithms, but more to 
+understand how they work and to be able to adapt or create the 
+appropriate algorithm to a situation. If you have a question or a 
+comment about this text, please send it to the above email address, I'll
+ be happy to answer as soon as possible. Anyway, the aim here is to give
+ more precise ideas on the subject of beat detection to the reader. 
+Enjoy.</p>
+
+<h1>I – Statistical streaming beat detection</h1>
+<h2>1 – Simple sound energy</h2>
+<h3>a - A first analysis</h3>
+
+<p>The human listening system determines the rhythm of music by 
+detecting a pseudo – periodical succession of beats. The signal which is
+ intercepted by the ear contains a certain energy, this energy is 
+converted into an electrical signal which the brain interprets. 
+Obviously, The more energy the sound transports, the louder the sound 
+will seem. But a sound will be heard as a <b>beat</b> only if his energy is largely superior to the sound's energy history, that is to say if the brain detects a <b>brutal variation in sound energy</b>.
+ Therefore if the ear intercepts a monotonous sound with sometimes big 
+energy peaks it will detect beats, however, if you play a continuous 
+loud sound you will not perceive any beats. Thus, the beats are big 
+variations of sound energy. This first analysis will bring us to our 
+simplest model : <b><i>Sound energy peaks</i></b>.</p>
+<p>In this model we will detect sound energy variations by computing <b>the average sound energy</b> of the signal and comparing it to the <b>instant sound energy</b>.
+ Lets say we are working in stereo mode with two lists of values : (an) 
+and (bn). (an) contains the list of sound amplitude values captured 
+every Te seconds for the left channel, (bn) the list of sound amplitude 
+values captured every Te seconds for the right channel. So we want to 
+compute the instant energy and the average energy of the signal. The 
+instant energy will in fact be the energy contained in 1024 samples 
+(1024 values of a[n] and b[n]), 1024 samples represent about 5 hundreds 
+of second which is pretty much 'instant'. The average energy should not 
+be computed on the entire song, some songs have both intense passages 
+and more calm parts. The instant energy must be compared to the nearby 
+average energy, for example if a song has an intense ending, the energy 
+contained in this ending shouldn't influence the beat detection at the 
+beginning. <b>We detect a beat only when the energy is superior to a local energy average.</b>
+ Thus we will compute the average energy on say : 44032 samples which is
+ about 1 second, that is to say we will assume that the hearing system 
+only remembers of 1 second of song to detect beat. This 1 second time 
+(44032 samples) is what we could call the human ear energy persistence 
+model; it is a compromise between being to big and taking into account 
+too far away energies, and being too small and becoming to close to the 
+instant energy to make a valuable comparison.</p>
+<p>The history buffer where we will keep the last 44032 samples wil 
+contain in fact too lists of samples (B[0]) and (B[1]) corresponding to 
+the left (an) and to the right (bn) channels history.</p>
+
+<p><b>Simple sound energy algorithm #1:</b></p>
+<div class="inlinebox">
+<p><b>Every 1024 samples:</b></p>
+<ul>
+  <li>Use the 1024 new samples taken in a[n] and b[n] to compute the 
+instant energy 'e', using the following formula (i0 is the position of 
+the 1024 samples to process):
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula1.png" alt="" height="64" width="327" border="0">
+  <br>(R1)</p>
+  </li>
+  <li>Compute the local average energy '&lt;E&gt;' on the 44100 samples of a history buffer (B):
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula2.png" alt="" height="52" width="356" border="0">
+  <br>(R2)</p>
+  </li><li>Shift the 44032 history buffer (B) of 1024 indexes to the 
+right so that we make room for the 1024 new samples and evacuate the 
+oldest 1024 samples.</li>
+  <li>Move the 1024 new samples on top of the history buffer.</li>
+  <li>Compare 'e' to 'C * &lt;E&gt;' where C is a constant which will 
+determine the sensibility of the algorithm to beats. A good value for 
+this constant is 1.3. If 'e' is superior to 'C * &lt;E&gt;' then we have
+ a beat!</li>
+</ul>
+</div>
+
+<h3>b - Some direct optimisations</h3>
+<p>This was the basic version of the algorithm, its speed and accurecy 
+can be improved quite easily. The algorithm can be optimised by <b>keeping the energy values computed on 1024 samples in history instead of the samples themselves</b>,
+ so that we don't have to compute the average energy on the 44100 
+samples buffer (B) but on the instant energies history we will call (E).
+ This sound energy history buffer (E) <b>must</b> correspond to approximately <b>1 second of music</b>,
+ that is to say it must contain the energy history of 44032 samples 
+(calculated on groups of 1024) if the sample rate is 44100 samples per 
+second. Thus E[0] will contain the newest energy computed on the newest 
+1024 samples, and E[42] will contain the oldest energy computed on the 
+oldest 1024 samples. We have 43 energy values in history, each computed 
+on 1024 samples which makes 44032 samples energy history, which is 
+equivalent to 1 second in real time. The count is good. The value of 1 
+second represents the persistance of the music energy in the human ear, 
+it was obtain with experimentations but it may varry a little from a 
+person to another, just adjust it as you feal. So here is what the 
+algorithm becomes:</p>
+
+<p><b>Simple sound energy algorithm #2:</b></p>
+<div class="inlinebox">
+<p><b>Every 1024 samples:</b></p>
+<ul>
+  <li>Compute the instant sound energy 'e' on the 1024 new sample values taken in (an) and (bn) using the formula <b>(R1)</b></li>
+  <li>Compute the average local energy &lt;E&gt; with (E) sound energy history buffer:
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula3.png" alt="" height="53" width="173" border="0">
+  <br>(R3)</p>
+  </li><li>Shift the sound energy history buffer (E) of 1 index to the right. We make room for the new energy value and flush the oldest.</li>
+  <li>Pile in the new energy value 'e' at E[0].</li>
+  <li>Compare 'e' to 'C*&lt;E&gt;'.</li>
+</ul>
+</div>
+
+<h3>c - Sensitivity detection</h3>
+<p>The imediate draw back of this algorithm is <b>the choice of the 'C' constant</b>.
+ For example in techno and rap music beats are quite intense and precise
+ so 'C' should be quite high (about 1.4); whereas for rock and roll, or 
+hard rock which contains a lot of noise, the beats are more confused and
+ 'C' should be low (about 1.1 or 1.0). There is a way, to make the 
+algorithm determine automatically the good choice for the 'C' constant. 
+We must compute <b>the variance of the energies</b> contained in the 
+energy history buffer (E). This variance, which is nothing but the 
+average of ( Energy Values – Energy average = (E) - &lt;E&gt; ), will 
+quantify how marked the beats of the song are and thus will give us a 
+way to compute the value of the 'C' constant. The formula to calculate 
+the variance of the 43 E[i] values is described below <b>(R4)</b>. 
+Finally, the greater the variance is the more sensitive the algorithm 
+should be and thus the smaller 'C' will become. We can choose a linear 
+decrease of 'C' with 'V' (the variance) and for example when V &#8594; 200, C &#8594;
+ 1.0 and when V &#8594; 25, C &#8594; 1.45 <b>(R5)</b>. This is our new version of the sound energy beat detection algorithm:</p>
+
+<p><b>Simple sound energy algorithm #3:</b></p>
+<div class="inlinebox">
+<p><b>Every 1024 samples:</b></p>
+<ul>
+  <li>Compute the instant sound energy 'e' on the 1024 new samples taken in (an) and (bn) using the following formula <b>(R1)</b>.</li>
+  <li>Compute the average local energy &lt;E&gt; with (E) sound energy history buffer using formula <b>(R3)</b>.</li>
+  <li>Compute the variance 'V' of the energies in (E) using the following formula:
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula4.png" alt="" height="56" width="231" border="0">
+  <br>(R4)</p></li>
+  <li>Compute the 'C' constant using a linear degression of 'C' with 'V', using a linear regression with values <b>(R5)</b>:
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula5.png" alt="" height="24" width="263" border="0">
+  <br>(R6)</p></li>
+  <li>Shift the sound energy history buffer (E) of 1 index to the right. We make room for the new energy value and flush the oldest.</li>
+  <li>Pile in the new energy value 'e' at E[0].</li>
+  <li>Compare 'e' to 'C*&lt;E&gt;', if superior we have a beat!</li>
+</ul>
+</div>
+
+<p>Those three algorithms were tested with several types of music, among
+ others : pop, rock, metal, techno, rap, classical, punk. The fact is 
+the results are quite unpredictable. I will only talk about <i>Simple beat detection algorithm #3</i> as <i>#2</i> and <i>#1</i> are only pedagogical intermediates to get to the <i>#3</i>.</p>
+<p>Clearly, <b>the beat detection is very accurate and sounds right with techno and rap</b>,
+ the beats are very precise and the music contains very few noise. The 
+algorithm is quite satisfying for that kind of music and if you aim to 
+use beat detection on techno you can stop reading here, the rest won't 
+change anything to your beat detection. However, even if the improvement
+ of the dynamic 'C' calculations ameliorates things alot, <b>the beat detection on punk, rock and hard rock, is sometimes quite approximate</b>.
+ We can feel it doesn't really get the rythm of the song. Indeed the 
+algorithm detects energy peaks. Sometimes you can hear a drum beat which
+ is sank among other noises and which goes trough the algorithm without 
+being detected as a beat. </p>
+<p>To explain this phenomena lets say a guitare and flute make 
+alternatively an amplitude constant note. Each time the first finishes 
+the other starts. The note made by the guitare and the note made by the 
+flute have the same energy but the ear detects a certain rhythm because 
+the notes of the instruments are at different pitch. For our algorithm 
+(who is one might say colorblind) it is just an amplitude constant noise
+ with no energy peaks. This partly explains why the algorithm doesn't 
+detect precisely beats in songs with a lot of instruments playing at 
+different rythms and simultaneously. Our next analysis will make us walk
+ through this difficulty.</p>
+<p>Comparing the results we have obtained with the <i>Simple beat detection algorithm #3</i>
+ to its computing cost, this algorithm is very efficient. If you are not
+ looking for a perfect beat detection than I recommend you use it. Here 
+is a screenshot of a program I made using this algorithm. You fill find 
+the binaries and the sources on my homepage.</p>
+<p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/image020.png" alt="" height="604" width="804" border="0">
+<br>Figure 1: The spectrum analyser is not useful for the beat detection
+ it is only for visual matters, but you can see at the top some of the 
+parameters the program computes to execute the algorithm.</p>
+
+<h2>2 – Frequency selected sound energy</h2>
+<h3>a - The idea and the algorithm</h3>
+<p>The issue with our last analysis of beat detection is that it is 
+colorblind. We have seen that this could raise quite a few problems for 
+noisy like songs in rock or pop music. What we must do is give our 
+algorithm the abbility to determine on which frequency subband we have a
+ beat and if it is powerful enough to take it into account. Basically we
+ will try to detect <b>big sound energy variations in particular frequency subbands</b>,
+ just like in our last analysis; unless this time we will be able to 
+seperate beats regarding their color ( frequency subband ). Thus If we 
+want to give more importants to low frequency beats or to high frequency
+ beats it should be more easy. Notice that the energy computed in the 
+time domain is the same as the energy computed in the frequency domain, 
+so we don't have any difference between computing the energy in time 
+domain or in frequency domain. For maths freaks this is called the 
+Parseval Theorem.</p>
+<p>Okay that was just a bit of sport, lets go back to the mainstream; Here is how the <b><i>Frequency selected sound energy</i></b>
+ algorithm works: The source signals are still coming from (an) and 
+(bn). (an) and (bn) can be taken from a wave file, or directly from a 
+streaming microphon or line input. Each time we have accumulated 1024 
+new samples, we will pass to the frequency domain with a <b>Fast Fourier Transform (FFT)</b>.
+ We will thus obtain a 1024 frequency spectrum. We then divide this 
+spectrum into however many subbands we like, here I will take 32. The 
+more subbands you have, the more sensitive the algorithm will be but the
+ harder it will become to adapt it to lots of different kinds of songs. 
+Then we compute the <b>sound energy</b> contained in <b>each of the subbands</b> and we compare it to the<b> recent energy average corresponding to this subband</b>. If one or more subbands have an energy superior to their average we have detected a beat.</p>
+<p>The great progress with the last algorithm is that we now know more 
+about our beats, and thus we can use this information to change an 
+animation, for example. So here is more precisely the <i>Frequency selected sound energy algorithm #1:</i></p>
+
+<p><b>Frequency selected sound energy algorithm #1:</b></p>
+<div class="inlinebox">
+<p><b>Every 1024 samples:</b></p>
+<ul>
+  <li>Compute the FFT on the 1024 new samples taken in (an) and (bn). 
+The FFT inputs a complex numeric signal. We will say (an) is the real 
+part of the signal and (bn) the imagenary part. Thus the FFT will be 
+made on the 1024 complex values of:
+  <p align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula6.png" alt="" height="31" width="109" border="0"></p>
+  <p><i>You can find FFT tutorials and codes in C, Visual Basic or C++ on my homepage in the 'tutorials' section or by typing 'FFT' on <a href="http://www.google.com/">Google</a>.</i></p>
+  </li>
+  <li>From the FFT we obtain 1024 complex numbers. We compute the square
+ of their module and store it into a new 1024 buffer. This buffer (B) 
+contains the 1024 frequency amplitudes of our signal.<br><br></li>
+  <li>Divide the buffer into 32 subbands, compute the energy on each of 
+these subbands and store it at (Es). Thus (Es) will be 32 sized and 
+Es[i] will contain the energy of subband 'i':
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula7.png" alt="" height="61" width="248" border="0">
+  <br>(R7)</p></li>
+  <li>Now, to each subband 'i' corresponds an energy history buffer 
+called (Ei). This buffer contains the last 43 energy computations for 
+the 'i' subband. We compute the average energy &lt;Ei&gt; for the 'i' 
+subband simply by using:
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula8.png" alt="" height="60" width="205" border="0">
+  <br>(R8)</p></li>
+  <li>Shift the sound energy history buffers (Ei) of 1 index to the 
+right. We make room for the new energy value of the subband 'i' and 
+flush the oldest.<br><br></li>
+  <li>Pile in the new energy value of subband 'i' : Es[i] at Ei[0].
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula9.png" alt="" height="33" width="129" border="0">
+  <br>(R9)</p></li>
+  <li>For each subband 'i' if Es[i] &gt; (C*&lt;Ei&gt;) we have a beat !</li>
+</ul>
+</div>
+
+<p>To help out visualising how the data piles work have a look at this scheme:</p>
+<p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/image032.png" alt="" height="392" width="721" border="0">
+<br>Figure 2: This is how the energy data is organized.</p>
+
+<p>Now the 'C' constant of this algorithm has nothing to do with the 'C'
+ of the first algorithm, because we deal here with separated subbands 
+the energy varies globally much more than with colorblind algorithms. 
+Thus 'C' must be about 250. The results of this algorithm are 
+convincing, it detects for example a symbal rhythm among other heavy 
+noises in metal rock, and indeed the algorithm separates the signal into
+ subbands, therefore the <b>symbal rhythm cannot pass trough the 
+algorithm without being recognized because it is isolated in the 
+frequency domain from other sounds. </b>However the complexity of the algorithm makes it useful only if you are dealing with very noisy sounds, in other cases, <i>Simple beat detection algorithm #3</i> will do the job.</p>
+
+<h3>b - Enhancements and beat decision factors.</h3>
+<p>There are ways to enhance a bit more our <i>Frequency selected sound energy algorithm #1</i>.</p>
+<p>First we will increase the <b>number of subbands from 32 to 64</b>. 
+This will take obviously more computing time but it will also give us 
+more precision in our beat detection. The second way to develop the 
+accuracy of the algorithm uses the defaults of human ears. Human hearing
+ system is not perfect; in fact its transfer function is more like a low
+ pass filter. We hear more easily and more clearly low pitched noises 
+than high pitch noises. This is why it is preferable to make a 
+logarithmic repartition of the subbands. That is to say that subband 0 
+will contain only say 2 frequencies whereas the last subband, will 
+contain say 20. <b>More precisely the width 'wi' of the 'n' subbands indexed 'i' can be obtained using this argument:</b></p>
+
+<p></p><div class="inlinebox">
+<ul>
+  <li>Linear increase of the width of the subband with its index:
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula10.png" alt="" height="25" width="123" border="0">
+  <br>(R10)</p></li>
+  <li>We can choose for example the width of the first subband:
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula11.png" alt="" height="25" width="97" border="0">
+  <br>(R11)</p></li>
+  <li>The sum of all the widths must not exceed 1024 ((B)'s size):
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula12.png" alt="" height="60" width="503" border="0">
+  <br>(R12)</p></li>
+</ul>
+</div>
+
+<p>Once you have equations <b>(R11)</b> and <b>(R12)</b> it is fairly 
+easy to extract 'a' and 'b', and thus to find the law of the 'wi'. This 
+calculus of 'a' and 'b' must be made manually and 'a' and 'b' defined as
+ constants in the source; indeed they do not vary during the song. </p>
+<p>So in fact in <i>Frequency selected sound energy algorithm #1</i>, all we have to modify is the number of subbands we will take equal to 64 and the <b>(R7)</b> relation. This relation becomes:</p>
+<p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/forumla7-2.png" alt="" height="137" width="312" border="0">
+<br>(R7)'</p>
+<p>It may seem rather complicated but in fact it is not. Replacing this relation <b>(R7)</b> with <b>(R7)'</b> we have created <i>Frequency selected sound energy algorithm #2.</i>
+ If you have musics with very tight and rapid beats, you may want to 
+compute the stuff more frequently than every 1024 samples, but this is 
+only for special cases, normally the beat should not be shorter than 
+1/40 of second.</p>
+<p>Using the advantages of Frequency selected beat detection you can 
+also enhance the beat decision factor. Up to now it was based on a 
+simple comparison between the instant energy of the subband and the 
+average energy of the subband. This algorithm enables you to decide 
+beats differently. You may want for examples to cut beats which 
+correspond to high pitch sounds if you run techno music or you may want 
+to keep only [50-4000Hz] beats if you are working with speech signal. 
+This algorithm has the advantage of being perfectly adaptable to any 
+kind or category of signal which was not the case of <i>Simple beat detection algorithm #3</i>. Notice that the correspondants between index 'i' of the FFT transform and real frequency is given by formula :</p>
+
+<p></p><div class="inlinebox">
+<ul>
+  <li>If 'i' &lt; 'N/2' then:
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula13.png" alt="" height="53" width="96" border="0">
+  <br>(R13)</p></li>
+  <li>Else 'i' &gt;= 'N/2' then:
+  <p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula14.png" alt="" height="53" width="153" border="0">
+  <br>(R14)</p></li>
+</ul>
+</div>
+
+<p>So 'i' is the index of the value in the FFT output buffer, N is the 
+size of the FFT transform (here 1024), fe is the sample frequency (here 
+44100). Thus index 256 corresponds to 10025 Hz. This formula may be 
+useful if you want to create your own subbands and you want to know what
+ the correspondants <b>between indexes and real frequency</b> are.</p>
+<p>Another way of filtering the beats, or selecting them, is choosing 
+only those which are marked and precise enough. As we have seen before, <b>to detect the accuracy of beats we must compute the variance of the energy histories for each subband</b>.
+ If this variance is high it means that we have great differences of 
+energy and thus that the beat are very intense. Thus all we have to do 
+is compute this variance for each subband and add a test in the beat 
+detection decision. To the "Es[i] &gt; (C*&lt;Ei&gt;)" condition we will
+ add "and V((Ei))&gt;V0". V0 will be the variance limit, with experience
+ 150 is a reasonable value. Now the V((Ei)) value is easy to compute, 
+just follow the following equality if you don't see how :</p>
+<p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/formula15.png" alt="" height="60" width="323" border="0">
+<br>(R15)</p>
+<p>The last (finally) way to enhance your beat detection, is to make the source signal pass through a <b>derivation filter. </b>Indeed
+ differentiating the signal makes big variations of amplitude more 
+marked and thus makes energy variations more marked and recognisable 
+later in the algorithm. I haven't tried this optimisation but according 
+to some sources this is quite useful. If you try it please give me your 
+opinion on it!</p>
+<p>Concerning the results of the <i>Frequency selected sound energy algorithm #2</i> I must admit they are way more satisfying than the <i>Simple sound energy algorithm #3</i>.
+ In a song the algorithm catches the bass beats as well as the tight 
+cymbals hits. I insist on the fact that you may also select the beats in
+ very different ways, which becomes quite useful if you know you are 
+going to run techno music with low pitch beats for example. You may also
+ select the beats differently according to there accuracy with the 
+variance criteria. There are many other ways to decide beats; it is up 
+to you to explore them and find the one which fits the most your needs.</p>
+<p>I used <i>Frequency selected sound energy algorithm #2</i>algorithm 
+in a demo program of which you can see some screenchots just below. One 
+can see quite clearly that there is a beat in low frequencies (probably a
+ bass or drum hit) and also a high pitch beat (probably a cymbal or 
+such):</p>
+<p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/image052.png" alt="" height="604" width="804" border="0">
+<br>Figure 3: The histogram represents the instant energy of the 128 subbands.</p>
+<p class="caption" align="center"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/image054.png" alt="" height="602" width="803" border="0">
+<br>Figure 4: On this screenshot you can see the 128 subbands 
+E/&lt;E&gt; ratios, and the bandwidth of the subbands. When the 
+algorithm detects a beat in a subband, it overwrites the ratio in red.</p>
+<p>The reason why I called this part of the document, 'Statistical 
+streaming beat detection', is that the energy can be considered as a 
+random variable, of which we have been calculating values over time. 
+Thus we could interpret those values as a sampling for the statistical 
+analysis of a random variable. But one can push this approach further. 
+When we have separated the energies histories into 128 subbands we 
+created in fact 128 random energy variables. We can then apply some of 
+the general statistical methods of analysis. For example, the principal 
+components analysis method will enable you to determine if some of the 
+subbands are directly linked or independent. This would help us to 
+regroup some subbands which are directly linked and thus make the beat 
+decision more efficient. However, this method is basically just far too 
+computing expensive and maybe just too hard to implement comparing to 
+the results we want. If you are looking for a really good challenge in 
+beat detection you could push in this direction.</p>
+
+<br><br><br>
+
+
+<p align="right"><b><a href="http://archive.gamedev.net/archive/reference/programming/features/beatdetection/page2.html"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/pointernext.gif" alt="" align="right" height="32" width="32" border="0">
+<br>Filtering rhythm detection</a></b></p>
+
+
+</td>
+<td valign="top">
+
+<table width="100%" border="0" cellpadding="4" cellspacing="0"><tbody><tr><td>
+
+
+
+<table style="clear: both" align="right" width="170" border="0" cellpadding="2" cellspacing="0"><tbody><tr><td align="center">
+
+
+<table width="100%" border="0" cellpadding="4" cellspacing="2">
+  <tbody><tr><td class="boxheadr" valign="top">Contents</td></tr>
+  <tr>
+    <td class="featmenu" valign="middle"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tbody><tr valign="top">
+        <td width="7"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/dotsm.gif" alt="" height="6" width="7" border="0">&nbsp;</td>
+        <td><a href="http://archive.gamedev.net/archive/reference/programming/features/beatdetection/default.html">Statistical streaming beat detection</a></td>
+      </tr>
+
+      <tr valign="top">
+        <td><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/dotsm.gif" alt="" height="6" width="7" border="0">&nbsp;</td>
+        <td><a href="http://archive.gamedev.net/archive/reference/programming/features/beatdetection/page2.html">Filtering rhythm detection</a></td>
+      </tr>
+
+    </tbody></table></td>
+  </tr>
+</tbody></table>
+
+<br><table class="featmenu" width="100%" border="0" cellpadding="4" cellspacing="2"><tbody><tr><td>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+
+  <tbody><tr valign="top">
+    <td width="24"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/print.gif" alt="" height="16" width="16" border="0">&nbsp;</td>
+    <td><a href="http://archive.gamedev.net/archive/reference/articles/article1952.html">Printable version</a></td>
+  </tr>
+
+  <tr valign="top">
+    <td width="24"><img src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/discuss.gif" alt="" height="16" width="16" border="0">&nbsp;</td>
+    <td><a href="http://archive.gamedev.net/community/forums/topic.asp?key=featart&amp;uid=1952&amp;forum_id=35&amp;Topic_Title=Beat+Detection+Algorithms">Discuss this article</a></td>
+  </tr>
+</tbody></table>
+</td></tr></tbody></table>
+<br>
+
+<script type="text/javascript">
+GA_googleFillSlot("Skyscraper_Main");
+</script><script src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/ads"></script>
+</td></tr></tbody></table>
+
+</td>
+</tr></tbody></table>
+
+</td></tr></tbody></table>
+
+
+</p></div>
+</div>
+
+
+<div id="footer">
+	<span><a href="http://archive.gamedev.net/archive/info/about/index.html">About Us</a> | <a href="http://archive.gamedev.net/archive/info/media/index.html">Advertise on GameDev.net</a> | <a href="http://archive.gamedev.net/archive/info/writers.html">Write for us</a></span>
+	<span>© 1999-2011 Gamedev.net. All rights reserved. <a href="http://archive.gamedev.net/archive/info/legal.html#copyright"><u>Terms of Use</u></a> <a href="http://archive.gamedev.net/archive/info/legal.html#privacy"><u>Privacy Policy</u></a></span>
+	<span class="maintext-2">GameDev.net™, the GameDev.net logo, and GDNet™ are trademarks of GameDev.net, LLC</span>
+    <span class="maintext-1">Comments? Questions? Feedback? <a href="http://archive.gamedev.net/archive/info/faq.html">Click here!</a></span>
+</div>
+
+<script type="text/javascript" src="GameDev.net%20--%20Beat%20Detection%20Algorithms_files/front.asp"></script>
+
+
+</body></html>
