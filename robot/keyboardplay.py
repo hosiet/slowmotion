@@ -16,21 +16,35 @@ import multiprocessing
 keyboard_data = {\
         8: {'low':0.17, 'high':0.21, 'gpio':25, 'time':0.14},\
         7: {'low':0.18, 'high':0.21, 'gpio':24, 'time':0.14},\
-        6: {'low':0.19, 'high':0.24, 'gpio':23, 'time':0.14},\
-        5: {'low':0.18, 'high':0.22, 'gpio':22, 'time':0.14},\
-        4: {'low':0.19, 'high':0.24, 'gpio':21, 'time':0.14},\
-        3: {'low':0.16, 'high':0.24, 'gpio':18, 'time':0.14},\
-        2: {'low':0.19, 'high':0.24, 'gpio':17, 'time':0.14},\
+        6: {'low':0.19, 'high':0.25, 'gpio':23, 'time':0.14},\
+        5: {'low':0.17, 'high':0.20, 'gpio':22, 'time':0.14},\
+        4: {'low':0.19, 'high':0.22, 'gpio':21, 'time':0.14},\
+        3: {'low':0.19, 'high':0.23, 'gpio':18, 'time':0.14},\
+        2: {'low':0.19, 'high':0.22, 'gpio':17, 'time':0.14},\
         1: {'low':0.18, 'high':0.22, 'gpio':4,  'time':0.12}}
 
 # 确认是树莓派平台
-is_under_pi = False
-#is_under_pi = True
+#is_under_pi = False
+is_under_pi = True
 
 def kp_play_note_once(inputnote):
     """
     Play a note once a time.
     """
+    if inputnote == 0:
+        # Do nothing
+        return
+    if inputnote == 9:
+        # Return to upright position
+        pass
+        count = 0
+        while count < 8:
+            count += 1
+            os.system('echo {0}={1} >> /dev/pi-blaster'.format(keyboard_data[count]['gpio'], keyboard_data[count]['high']))
+            time.sleep(keyboard_data[count]['time'])
+        print('All released.')
+        return
+
     print('{0} pressed; Will play: {1}.'.format(inputnote, keyboard_data[inputnote]))
     if not is_under_pi:
         return
@@ -56,8 +70,9 @@ def kp_start_playing():
         while True:
             if not isData():
                 c = sys.stdin.read(1)
-                if c >= '1' and c <= '8':
+                if c >= '0' and c <= '8':
                     # Valid input, use multiprocessing to prevent problem?
+                    # 0 means release
                     p = multiprocessing.Process(target=kp_play_note_once, args=(int(c),))
                     p.start()
                     # Never join!
