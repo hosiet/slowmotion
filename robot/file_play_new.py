@@ -2,10 +2,9 @@
 
 import sys, os
 import keyboardplay
-import time
-import xml
+import time, sched
 import xml.dom
-import xml.dom.minidom
+import xml.etree.ElementTree as ET
 
 debug = False
 #debug = True
@@ -15,33 +14,38 @@ class PlayableNote():
         """
         Parse the orig_str for the convinence of playing.
 
-	playplan should be an iterable for both note and the play time.
+        playplan should be an iterable for both note and the play time.
         """
         self.playplan = [];
-        onenote = {"note":None, "time":None}
-	# First Step: determine input to be a valid XML
-        for i in orig_str.splitlines():
-            #print('Now i is {}.'.format(i))
-            if i.isdigit():
-                # Consider it to be note(1-8) or empty(0)
-                if not (int(i) >= 1 and int(i) <= 8):
-                    raise Exception('Bad note number')
-                onenote["note"] = int(i)
-            elif i[-1] == 's':
-                # Consider it to be seconds
-                onenote["time"] = eval(i[:-1])
-            if onenote["note"] != None and onenote["time"] != None:
-                #print('Now onenote is {}.'.format(onenote))
-                self.playplan.append(onenote.copy())                    # 惊天大坑
-                #print('Now self.playplan is {}.'.format(self.playplan))
-                onenote["note"], onenote["time"] = None, None
+        # First Step: determine input to be a valid XML
+        root = ET.fromstring(orig_str)
+        if not root.tag == 'transaction': # only begin with a transaction
+            print('BAD FILE DETECTED')
+            sys.exit(1)
+        for child in root:
+            if not child.tag == 'play': # IGNORE non-play tag
+                continue
+            self.playplan.append(child.attrib.copy())
         return
 
     def play(self):
-        print("Now i have {}.".format(self.playplan))
+        """
+        Play song using new format.
+
+        Now considering use multithreading way.
+        """
+        s = sched.scheduler(time.time, time.sleep)
+        print("Now I have {}.".format(self.playplan))
+        last_time = 0;
         for i in self.playplan:
-            keyboardplay.kp_play_note_once(i["note"])
-            time.sleep(i["time"])
+            if eval(i["time"]) == 0.0:
+                s.enter(0, 1, self.mydelaytime)
+                last_time = eval(i["time"])
+            else:
+                s.enter(eval(i["time"])-last_time, 1, keyboardplay.kp_play_note_once(eval(i["note"])))
+            #keyboardplay.kp_play_note_once(i["note"])
+            #time.sleep(i["time"])
+        s.run()
         return
 
 def playFile(filename):
