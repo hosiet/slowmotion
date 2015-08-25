@@ -3,17 +3,23 @@
 import sys, os
 import keyboardplay
 import time
+import xml
+import xml.dom
+import xml.dom.minidom
 
 debug = False
 #debug = True
 
-class PlayableNote_old():
+class PlayableNote():
     def __init__(self, orig_str):
         """
         Parse the orig_str for the convinence of playing.
+
+	playplan should be an iterable for both note and the play time.
         """
         self.playplan = [];
         onenote = {"note":None, "time":None}
+	# First Step: determine input to be a valid XML
         for i in orig_str.splitlines():
             #print('Now i is {}.'.format(i))
             if i.isdigit():
@@ -41,15 +47,7 @@ class PlayableNote_old():
 def playFile(filename):
     """ Parse file.
 
-Example:
-
-1
-0.2s
-2
-0.3s
-3
-0.5s
-
+    Example is shown in song3.song.
 
     Note: 0 is empty and shall accept.
 
@@ -66,7 +64,7 @@ Example:
     #
     # Example:
     s = f.read()
-    playObject = PlayableNote_old(s)
+    playObject = PlayableNote(s)
     playObject.play()
 
 if __name__ == "__main__":
