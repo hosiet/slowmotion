@@ -133,6 +133,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                 if is_command_note_single():
                     # TODO PLAY THE NOTE
                     keyboardplay.kp_play_note_once(int(xmlroot.attrib['note']))
+                    self.errlog('Now in USERPLAY mode.')
                 else:
                     self.errlog('NOW IN USERPLAY, BUT COMMAND NOT FOUND')
                 finally:

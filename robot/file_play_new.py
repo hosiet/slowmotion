@@ -2,7 +2,7 @@
 
 import sys, os
 import keyboardplay
-import time, sched
+import time, threading
 import xml.dom
 import xml.etree.ElementTree as ET
 
@@ -33,19 +33,17 @@ class PlayableNote():
         Play song using new format.
 
         Now considering use multithreading way.
+        However, actually I used the threading.Timer().
         """
-        s = sched.scheduler(time.time, time.sleep)
         print("Now I have {}.".format(self.playplan))
-        last_time = 0;
         for i in self.playplan:
-            if eval(i["time"]) == 0.0:
-                s.enter(0, 1, self.mydelaytime)
-                last_time = eval(i["time"])
-            else:
-                s.enter(eval(i["time"])-last_time, 1, keyboardplay.kp_play_note_once(eval(i["note"])))
-            #keyboardplay.kp_play_note_once(i["note"])
-            #time.sleep(i["time"])
-        s.run()
+            print("i is {}.".format(i))
+            mytime = eval(i["time"])
+            mynote = eval(i["note"])
+            t = threading.Timer(mytime, keyboardplay.kp_play_note_once, (mynote,))
+            t.start()
+            print("time is {0} and note is {1}.".format(eval(i["time"]), eval(i["note"])))
+            print(time.time())
         return
 
 def playFile(filename):
