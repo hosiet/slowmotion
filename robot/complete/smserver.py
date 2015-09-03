@@ -16,15 +16,41 @@ import socketserver
 import xml.etree.ElementTree as ET
 
 import smglobal
+from smglobal import DEBUG
 import smlibaction
 import keyboardplay
 
+def is_command_reset_note(xmlroot):
+    return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'reset note'
+def is_command_reset_all(xmlroot):
+    return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'reset all'
+def is_status_standby():
+    return smglobal.ROBOT_STATUS in smglobal.ROBOT_STATUS_LIST and smglobal.ROBOT_STATUS == 'STANDBY'
+def is_status_userplay():
+    return smglobal.ROBOT_STATUS in smglobal.ROBOT_STATUS_LIST and smglobal.ROBOT_STATUS == 'USERPLAY'
+def is_status_userplay_transaction():
+    return smglobal.ROBOT_STATUS in smglobal.ROBOT_STATUS_LIST and smglobal.ROBOT_STATUS == 'USERPLAY_TRANSACTION'
+def is_status_music():
+    return smglobal.ROBOT_STATUS in smglobal.ROBOT_STATUS_LIST and smglobal.ROBOT_STATUS == 'MUSIC'
+def is_command_userplay(xmlroot):
+    return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'state userplay'
+def is_command_userplay_transaction(xmlroot):
+    return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'state userplay_transaction'
+def is_command_music(xmlroot):
+    return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'state music'
+def is_command_note_single(xmlroot):
+    return xmlroot.tag == 'play' and 'note' in xmlroot.attrib.keys()
+def is_command_poweroff(xmlroot):
+    return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'poweroff'
+def is_command_reboot(xmlroot):
+    return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'reboot'
+        
 class MyTCPInfoHandler(socketserver.StreamRequestHandler):
 
     timeout = None;
 
     def errlog(self, logstr):
-        printf(logstr)
+        print(logstr, file=sys.stderr)
 
     # Override
     def handle(self):
@@ -34,33 +60,6 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
         Using XML as data format.
         """
         # {{{ Some simple static functions
-        @staticmethod
-        def is_command_reset_note(xmlroot):
-            return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'reset note'
-        @staticmethod
-        def is_command_reset_all(xmlroot):
-            return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'reset all'
-        @staticmethod
-        def is_status_standby():
-            return smglobal.ROBOT_STATUS in smglobal.ROBOT_STATUS_LIST and smglobal.ROBOT_STATUS == 'STANDBY'
-        @staticmethod
-        def is_status_userplay():
-            return smglobal.ROBOT_STATUS in smglobal.ROBOT_STATUS_LIST and smglobal.ROBOT_STATUS == 'USERPLAY'
-        @staticmethod
-        def is_status_userplay_transaction():
-            return smglobal.ROBOT_STATUS in smglobal.ROBOT_STATUS_LIST and smglobal.ROBOT_STATUS == 'USERPLAY_TRANSACTION'
-        @staticmethod
-        def is_command_userplay(xmlroot):
-            return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'state userplay'
-        @staticmethod
-        def is_command_userplay_transaction(xmlroot):
-            return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'state userplay_transaction'
-        @staticmethod
-        def is_command_music(xmlroot):
-            return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'state music'
-        @staticmethod
-        def is_command_note_single(xmlroot):
-            return xmlroot.tag == 'play' and 'note' in xmlroot.attrib.keys()
 
         # }}} end of some simple static functions
 
@@ -109,6 +108,17 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                 smlibaction.smActionResetAll()
                 continue
 
+            # No.3 action:poweroff or action:reboot
+            if is_command_poweroff(xmlroot):
+                smlibaction.smActionResetAll()
+                smlibaction.smPowerOff()
+                sys.exit(0)
+
+            if is_command_reboot(xmlroot):
+                smlibaction.smActionResetAll()
+                smlibaction.smReboot()
+                sys.exit(0)
+
             ###### }}}
 
             ###### {{{ Parse commands according to status
@@ -130,14 +140,13 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
 
             # No.2 'USERPLAY'
             if is_status_userplay():
-                if is_command_note_single():
+                if is_command_note_single(xmlroot):
                     # TODO PLAY THE NOTE
                     keyboardplay.kp_play_note_once(int(xmlroot.attrib['note']))
                     self.errlog('Now in USERPLAY mode.')
                 else:
                     self.errlog('NOW IN USERPLAY, BUT COMMAND NOT FOUND')
-                finally:
-                    continue
+                continue
 
 
             # No.3 'USERPLAY_TRANSACTION'
@@ -145,17 +154,41 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                 pass
 
             # No.4 'MUSIC'
+            if is_status_music():
+                if xmlroot.tag == 'music':
+                    if 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'get':
+                        if 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'list':
+                            pass # TODO
+                        if 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'status':
+                            pass # TODO
+                    if 'action' in xmlroot.attrib.keys():
+                        if xmlroot.attrib['action'] == 'play' and 'which' in xmlroot.attrib.keys():
+                            smlibaction.sm_music_PlayMusicById(int(xmlroot.attrib['which']))
+                        if xmlroot.attrib['action'] == 'pause':
+                            smlibaction.sm_music_Pause()
+                        if xmlroot.attrib['action'] == 'stop':
+                            smlibaction.sm_music_Stop()
+                    continue
+                else:
+                    # TAG IS NOT MUSIC
+                    pass
 
-            self.errlog('COMMAND NOT CATCHED, NOT CONTINUEING')
+        self.errlog('COMMAND NOT CATCHED, NOT CONTINUEING')
 
-             # 0 Will be omitted as a testing for connectivity
+        # 0 Will be omitted as a testing for connectivity
 
-             ###### }}}
+         ###### }}}
         print('Connection closed by me.')
         return
 
 if __name__ == "__main__":
     HOST, PORT = "0.0.0.0", 9999
+    
+    # First Run, we should reset the note
+    smlibaction.smActionResetNote()
+
+    # Set robot status for the first time
+    smglobal.ROBOT_STATUS = 'STANDBY'
 
     # Create server and Bind to port
     server = socketserver.TCPServer((HOST, PORT), MyTCPInfoHandler)

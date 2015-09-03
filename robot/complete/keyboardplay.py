@@ -11,6 +11,11 @@ import tty
 import termios
 import time
 import multiprocessing
+try:
+    from smglobal import DEBUG
+except ImportError:
+    DEBUG = False
+    print('no smglobal found, passing.', file=sys.stderr)
 
 # 键值数值标记
 keyboard_data = {\
@@ -46,7 +51,8 @@ def kp_play_note_once(inputnote):
         return
 
     print('{0} pressed; Will play: {1}.'.format(inputnote, keyboard_data[inputnote]))
-    if not is_under_pi:
+    if DEBUG:
+        print('kp_play_note_once(): Will play note, passing.', file=sys.stderr)
         return
     os.system('echo {0}={1} >> /dev/pi-blaster'.format(keyboard_data[inputnote]['gpio'], keyboard_data[inputnote]['low']))
     time.sleep(keyboard_data[inputnote]['time'])
