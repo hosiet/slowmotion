@@ -8,7 +8,7 @@
 # To record current running status.
 
 ## Robot status tuple
-ROBOT_STATUS_LIST=("STANDBY", "USERPLAY", "USERPLAY_TRANSACTION", "MUSIC_PLAYER",)
+ROBOT_STATUS_LIST=("STANDBY", "USERPLAY", "USERPLAY_TRANSACTION", "MUSIC",)
 
 ## Robot status
 ROBOT_STATUS=None

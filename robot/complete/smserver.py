@@ -119,6 +119,9 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                 smlibaction.smReboot()
                 sys.exit(0)
 
+            # No.4 get status
+            # TODO FIXME
+
             ###### }}}
 
             ###### {{{ Parse commands according to status
@@ -161,7 +164,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                             pass # TODO
                         if 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'status':
                             pass # TODO
-                    if 'action' in xmlroot.attrib.keys():
+                    elif 'action' in xmlroot.attrib.keys():
                         if xmlroot.attrib['action'] == 'play' and 'which' in xmlroot.attrib.keys():
                             smlibaction.sm_music_PlayMusicById(int(xmlroot.attrib['which']))
                         if xmlroot.attrib['action'] == 'pause':
