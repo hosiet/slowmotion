@@ -63,18 +63,4 @@ def smReboot():
     os.system('reboot')
     return
 
-def sm_music_PlayMusicById(number):
-    """
-    Play music according to preset number.
-    """
-    print('will play {}.'.format(number), out=sys.stderr)
-    #FIXME
-    return
-
-def sm_music_Pause():
-    pass
-
-def sm_music_Stop():
-    pass
-
 #  vim: set ts=8 sw=4 tw=0 et :

@@ -21,6 +21,7 @@ import smlibaction
 import smusicplayer
 import keyboardplay
 
+# {{{ Some convenient functions
 def is_command_reset_note(xmlroot):
     return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'reset note'
 def is_command_reset_all(xmlroot):
@@ -45,13 +46,15 @@ def is_command_poweroff(xmlroot):
     return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'poweroff'
 def is_command_reboot(xmlroot):
     return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'reboot'
+# }}}
         
 class MyTCPInfoHandler(socketserver.StreamRequestHandler):
 
     timeout = None;
 
     def errlog(self, logstr):
-        print(logstr, file=sys.stderr)
+        if DEBUG:
+            print(logstr, file=sys.stderr)
 
     # Override
     def handle(self):
@@ -60,13 +63,11 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
 
         Using XML as data format.
         """
-        # {{{ Some simple static functions
-
-        # }}} end of some simple static functions
-
+        self.errlog('New connection accepted.')
         while True:
 
             # {{{ Pre-formatting
+            self.errlog('Entering command parsing...')
             self.data = self.rfile.readline()                   # DO NOT REMOVE '\n'
             print("Data is {}.".format(self.data))
             if self.data == b'':                                # Connection reset by peer
@@ -125,7 +126,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
 
             ###### }}}
 
-            ###### {{{ Parse commands according to status
+            ### {{{ Parse commands 1 'STANDBY'
 
             # No.1 'STANDBY'
             if is_status_standby():
@@ -143,6 +144,9 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                 else:
                     self.errlog('NOW IN STANDBY, BUT COMMAND NOT FOUND')
 
+            ### }}}
+            ### {{{ Parse commands 2 'USERPLAY'
+
             # No.2 'USERPLAY'
             if is_status_userplay():
                 if is_command_note_single(xmlroot):
@@ -151,11 +155,16 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                     self.errlog('NOW IN USERPLAY, BUT COMMAND NOT FOUND')
                 continue
 
+            ### }}}
+            ### {{{ Parse commands 3 'USERPLAY_TRANSACTION'
 
             # No.3 'USERPLAY_TRANSACTION'
             if is_status_userplay_transaction():
                 # TODO
                 pass
+
+            ### }}}
+            ### {{{ Parse commands 4 'MUSIC'
 
             # No.4 'MUSIC'
             if is_status_music():
@@ -167,31 +176,35 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                             pass # TODO
                     elif 'action' in xmlroot.attrib.keys():
                         if xmlroot.attrib['action'] == 'play' and 'which' in xmlroot.attrib.keys():
-                            smlibaction.sm_music_PlayMusicById(int(xmlroot.attrib['which']))
+                            smusicplayer.smPlayMusicById(int(xmlroot.attrib['which']))
                         if xmlroot.attrib['action'] == 'pause':
                             smlibaction.sm_music_Pause()
                         if xmlroot.attrib['action'] == 'stop':
-                            smlibaction.sm_music_Stop()
-                    continue
+                            smusicplayer.smStopMusic()
+                    continue # FIXME is it correct?
                 else:
                     # TAG IS NOT MUSIC
                     pass
 
         self.errlog('COMMAND NOT CAUGHT, NOT CONTINUEING')
 
-        # 0 Will be omitted as a testing for connectivity
+         ### }}}
 
-         ###### }}}
         print('Connection closed by me.')
         return
 
 if __name__ == "__main__":
     HOST, PORT = "0.0.0.0", 9999
+
+    # First of all, change present working directory to smglobal.PROGRAM_PREFIX
+    os.chdir(smglobal.PROGRAM_PREFIX)
     
     # First Run, we should reset the note
     smlibaction.smActionResetNote()
 
     # Next, open a subprocess of mplayer for playing music
+    smglobal.ROBOT_MUSIC_HANDLER = smusicplayer.smGetMusicPipe()
+    ## TODO Write termination functions
 
     # Set robot status for the first time
     smglobal.ROBOT_STATUS = 'STANDBY'
