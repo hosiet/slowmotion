@@ -2,9 +2,6 @@
 """
 Socket Server.
 
-Now receive line-based instruction. e.g.:
-    '1\n'
-    '2\n'
 
 Will listen to port such as '9999'
 
@@ -47,8 +44,15 @@ def is_command_poweroff(xmlroot):
 def is_command_reboot(xmlroot):
     return xmlroot.tag == 'command' and 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'reboot'
 # }}}
-        
+
 class MyTCPInfoHandler(socketserver.StreamRequestHandler):
+    """
+    Handler the socket connection.
+
+    Note: self.request is the socket object here.
+
+    use self.request.sendall(byte) to send data is OK.
+    """
 
     timeout = None;
 
@@ -131,18 +135,19 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             # No.1 'STANDBY'
             if is_status_standby():
                 if is_command_userplay(xmlroot):
-                    # TODO ENTER USERPLAY MODE
                     smglobal.ROBOT_STATUS = "USERPLAY"
-                    self.errlog('Now in USERPLAY mode.')
+                    self.errlog('Now enter USERPLAY mode.')
                     continue
                 elif is_command_userplay_transaction(xmlroot):
                     # TODO ENTER USERPLAY_TRANSACTION MODE
                     continue
                 elif is_command_music(xmlroot):
-                    # TODO ENTER MUSIC MODE
+                    smglobal.ROBOT_STATUS = "MUSIC"
+                    self.errlog('Now enter MUSIC mode.')
                     continue
                 else:
                     self.errlog('NOW IN STANDBY, BUT COMMAND NOT FOUND')
+                    continue
 
             ### }}}
             ### {{{ Parse commands 2 'USERPLAY'
@@ -171,15 +176,16 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                 if xmlroot.tag == 'music':
                     if 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'get':
                         if 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'list':
-                            pass # TODO
-                        if 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'status':
+                            str = smusicplayer.smGetMusicList()
+                            self.request.sendall(str.encode('UTF-8'))
+                        elif 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'status':
                             pass # TODO
                     elif 'action' in xmlroot.attrib.keys():
                         if xmlroot.attrib['action'] == 'play' and 'which' in xmlroot.attrib.keys():
                             smusicplayer.smPlayMusicById(int(xmlroot.attrib['which']))
-                        if xmlroot.attrib['action'] == 'pause':
-                            smlibaction.sm_music_Pause()
-                        if xmlroot.attrib['action'] == 'stop':
+                        elif xmlroot.attrib['action'] == 'pause':
+                            smusicplayer.smPauseMusic()
+                        elif xmlroot.attrib['action'] == 'stop':
                             smusicplayer.smStopMusic()
                     continue # FIXME is it correct?
                 else:
@@ -198,12 +204,12 @@ if __name__ == "__main__":
 
     # First of all, change present working directory to smglobal.PROGRAM_PREFIX
     os.chdir(smglobal.PROGRAM_PREFIX)
-    
+
     # First Run, we should reset the note
     smlibaction.smActionResetNote()
 
     # Next, open a subprocess of mplayer for playing music
-    smglobal.ROBOT_MUSIC_HANDLER = smusicplayer.smGetMusicPipe()
+    smusicplayer.smGetMusicPipe()
     ## TODO Write termination functions
 
     # Set robot status for the first time
