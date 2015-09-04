@@ -16,6 +16,7 @@ import smglobal
 from smglobal import DEBUG
 import smlibaction
 import smusicplayer
+import smplayfile
 import keyboardplay
 
 # {{{ Some convenient functions
@@ -126,11 +127,16 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                 sys.exit(0)
 
             # No.4 get status
-            # TODO FIXME
+            if (xmlroot.tag == 'command' 
+                    and 'action' in xmlroot.attrib.keys() 
+                    and xmlroot.attrib['action'] == 'get status'):
+                xmlroot = ET.Element('response').set('status', smglobal.ROBOT_STATUS)
+                self.request.sendall(ET.dump(xmlroot).encode('UTF-8'))
+                continue
 
             ###### }}}
 
-            ### {{{ Parse commands 1 'STANDBY'
+            ### {{{ Parse commands 1 'STANDBY'; Able to change status
 
             # No.1 'STANDBY'
             if is_status_standby():
@@ -139,14 +145,15 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                     self.errlog('Now enter USERPLAY mode.')
                     continue
                 elif is_command_userplay_transaction(xmlroot):
-                    # TODO ENTER USERPLAY_TRANSACTION MODE
+                    smglobal.ROBOT_STATUS = "USERPLAY_TRANSACTION"
+                    self.errlog('Now enter USERPLAY_TRANSACTION mode.')
                     continue
                 elif is_command_music(xmlroot):
                     smglobal.ROBOT_STATUS = "MUSIC"
                     self.errlog('Now enter MUSIC mode.')
                     continue
                 else:
-                    self.errlog('NOW IN STANDBY, BUT COMMAND NOT FOUND')
+                    self.errlog('NOW IN STANDBY, BUT COMMAND NOT FOUND, ignoring...')
                     continue
 
             ### }}}
@@ -165,8 +172,13 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
 
             # No.3 'USERPLAY_TRANSACTION'
             if is_status_userplay_transaction():
-                # TODO
-                pass
+                'only one single line will be received, which is the song(note) to be played.'
+                if xmlroot.tag == 'transaction':
+                    try:
+                        smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER = smplayfile.PlayableNote(mydata)
+                        smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER.play()
+                    except:
+                        raise
 
             ### }}}
             ### {{{ Parse commands 4 'MUSIC'
@@ -179,7 +191,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                             str = smusicplayer.smGetMusicList()
                             self.request.sendall(str.encode('UTF-8'))
                         elif 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'status':
-                            pass # TODO
+                            pass # FIXME
                     elif 'action' in xmlroot.attrib.keys():
                         if xmlroot.attrib['action'] == 'play' and 'which' in xmlroot.attrib.keys():
                             smusicplayer.smPlayMusicById(int(xmlroot.attrib['which']))
@@ -210,7 +222,9 @@ if __name__ == "__main__":
 
     # Next, open a subprocess of mplayer for playing music
     smusicplayer.smGetMusicPipe()
-    ## TODO Write termination functions
+
+    ## NOTE Write termination functions
+    ## Actually needn't. The Popen()-ed process will terminate automatically.
 
     # Set robot status for the first time
     smglobal.ROBOT_STATUS = 'STANDBY'

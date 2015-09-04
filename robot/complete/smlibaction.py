@@ -28,6 +28,8 @@ def smActionResetNote():
 def smActionResetAll():
     """
     Reset all subprocesses.
+
+    However, this will not reset notes.
     """
     # First Step: Check current running status
     if smglobal.ROBOT_STATUS == None:
@@ -35,9 +37,16 @@ def smActionResetAll():
     elif smglobal.ROBOT_STATUS == "STANDBY" and smglobal.ROBOT_STATUS in smglobal.ROBOT_STATUS_LIST:
         return False
     else:
-        # Second Step: send SIGUSR1 to all subprocesses
-        # TODO
-        pass
+        # Second Step: Stop and clear the USERPLAY_TRANSACTION handler, if exists
+        if smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER != None:
+            smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER.stop()
+
+        smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER = None
+
+    # Third Step: Stop and clear the MUSIC handler, if exists
+    if smglobal.ROBOT_MUSIC_HANDLER != None:
+        smusicplayer.smStopMusicPipe()
+        smglobal.ROBOT_MUSIC_HANDLER = None
 
     # Finally we switch the status to standby
     smglobal.ROBOT_STATUS = "STANDBY"

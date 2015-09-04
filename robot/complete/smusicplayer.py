@@ -101,6 +101,4 @@ def smGetMusicList():
     close(conn)
     return ET.dump(xmlroot)
 
-
-
 #  vim: set ts=8 sw=4 tw=0 et :
