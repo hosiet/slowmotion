@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3 -O
 """
 Socket Server.
 
@@ -18,6 +18,7 @@ import xml.etree.ElementTree as ET
 import smglobal
 from smglobal import DEBUG
 import smlibaction
+import smusicplayer
 import keyboardplay
 
 def is_command_reset_note(xmlroot):
@@ -131,6 +132,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                 if is_command_userplay(xmlroot):
                     # TODO ENTER USERPLAY MODE
                     smglobal.ROBOT_STATUS = "USERPLAY"
+                    self.errlog('Now in USERPLAY mode.')
                     continue
                 elif is_command_userplay_transaction(xmlroot):
                     # TODO ENTER USERPLAY_TRANSACTION MODE
@@ -144,9 +146,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             # No.2 'USERPLAY'
             if is_status_userplay():
                 if is_command_note_single(xmlroot):
-                    # TODO PLAY THE NOTE
                     keyboardplay.kp_play_note_once(int(xmlroot.attrib['note']))
-                    self.errlog('Now in USERPLAY mode.')
                 else:
                     self.errlog('NOW IN USERPLAY, BUT COMMAND NOT FOUND')
                 continue
@@ -154,6 +154,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
 
             # No.3 'USERPLAY_TRANSACTION'
             if is_status_userplay_transaction():
+                # TODO
                 pass
 
             # No.4 'MUSIC'
@@ -176,7 +177,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                     # TAG IS NOT MUSIC
                     pass
 
-        self.errlog('COMMAND NOT CATCHED, NOT CONTINUEING')
+        self.errlog('COMMAND NOT CAUGHT, NOT CONTINUEING')
 
         # 0 Will be omitted as a testing for connectivity
 
@@ -189,6 +190,8 @@ if __name__ == "__main__":
     
     # First Run, we should reset the note
     smlibaction.smActionResetNote()
+
+    # Next, open a subprocess of mplayer for playing music
 
     # Set robot status for the first time
     smglobal.ROBOT_STATUS = 'STANDBY'

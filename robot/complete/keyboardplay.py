@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3 -O
 # -*- coding: utf-8 -*-
 
 # 仅为了测试与检查所用。

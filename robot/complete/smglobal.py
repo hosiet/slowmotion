@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3 -O
 
 ##########################################################
 
@@ -15,6 +15,9 @@ ROBOT_STATUS=None
 
 ## Subprocess list
 ROBOT_SUBPROCESSES=[]
+
+## Music pipe
+ROBOT_MUSIC_HANDLER=None
 
 ## Set if it is debug
 DEBUG=True
