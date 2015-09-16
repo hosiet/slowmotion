@@ -72,7 +72,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
         while True:
 
             # {{{ Pre-formatting
-            self.errlog('Entering command parsing...')
+            self.errlog('Parsing cmd. STATUS: {}'.format(smglobal.ROBOT_STATUS))
             self.data = self.rfile.readline()                   # DO NOT REMOVE '\n'
             print("Data is {}.".format(self.data))
             if self.data == b'':                                # Connection reset by peer
@@ -112,6 +112,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             # No.2 action:reset all
             # Will always run
             if is_command_reset_all(xmlroot):
+                self.errlog("Received RESET_ALL command.")
                 smlibaction.smActionResetAll()
                 continue
 
