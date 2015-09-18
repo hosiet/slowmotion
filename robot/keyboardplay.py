@@ -14,16 +14,16 @@ import multiprocessing
 
 # 键值数值标记
 keyboard_data = {\
-        "=": {"low":0.24, "high":0.22, "gpio":21, "time":0.14},\
-        "-": {"low":0.242, "high":0.22, "gpio":18, "time":0.14},\
+        "=": {"low":0.23, "high":0.21, "gpio":21, "time":0.14},\
+        "-": {"low":0.23, "high":0.21, "gpio":18, "time":0.14},\
         '0': {"low":0.22, "high":0.20, "gpio":17, "time":0.14},\
         '9': {"low":0.23, 'high':0.20, 'gpio':4, 'time':0.12},\
         '8': {'low':0.165, 'high':0.21, 'gpio':25, 'time':0.14},\
         '7': {'low':0.18, 'high':0.21, 'gpio':24, 'time':0.14},\
         '6': {'low':0.23, 'high':0.26, 'gpio':23, 'time':0.14},\
         '5': {'low':0.18, 'high':0.20, 'gpio':22, 'time':0.14},\
-        '4': {'low':0.19, 'high':0.22, 'gpio':21, 'time':0.14},\
-        '3': {'low':0.19, 'high':0.22, 'gpio':18, 'time':0.14},\
+        '4': {'low':0.19, 'high':0.21, 'gpio':21, 'time':0.14},\
+        '3': {'low':0.19, 'high':0.21, 'gpio':18, 'time':0.14},\
         '2': {'low':0.18, 'high':0.20, 'gpio':17, 'time':0.14},\
         '1': {'low':0.18, 'high':0.20, 'gpio':4,  'time':0.12}}
 
