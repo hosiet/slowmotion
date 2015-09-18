@@ -8,7 +8,7 @@ Library functions for Slowmotion robots.
   To use properly, you need to do the 'from librobotaction import *'.
 
 """
-import os, sys
+import os, sys, time
 import smglobal
 from smglobal import DEBUG
 import xml.etree.ElementTree as ET
@@ -22,7 +22,7 @@ def smActionResetNote():
     if DEBUG == True:
         print('smActionResetNote(): Will reset note, passing.', file=sys.stderr)
         return
-    for i in range(1, 9):
+    for i in ['1', '2', '3', '4', '5', '6', '7', '0']:
         os.system('echo {0}={1} >> /dev/pi-blaster'.format(keyboard_data[i]['gpio'], keyboard_data[i]['high']))
         time.sleep(0.2)
 

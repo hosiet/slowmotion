@@ -98,7 +98,7 @@ def smGetMusicList():
         subelement.set('id', row[0])
         subelement.set('filename', row[1])
         subelement.set('havenote', row[2])
-    close(conn)
+    conn.close()
     return ET.dump(xmlroot)
 
 #  vim: set ts=8 sw=4 tw=0 et :
