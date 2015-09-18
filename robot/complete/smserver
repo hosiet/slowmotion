@@ -135,7 +135,9 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                     and 'action' in xmlroot.attrib.keys() 
                     and xmlroot.attrib['action'] == 'get status'):
                 xmlroot = ET.Element('response').set('status', smglobal.ROBOT_STATUS)
-                self.request.sendall(ET.dump(xmlroot).encode('UTF-8'))
+                result = self.request.sendall(ET.dump(xmlroot).encode('UTF-8'))
+                if result == None:
+                    self.errlog('data sent successfully.')
                 continue
 
             ###### }}}
@@ -198,7 +200,12 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                         if 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'list':
                             mystr = smusicplayer.smGetMusicList()
                             self.errlog('Will now send music list:{}.'.format(mystr))
-                            self.request.sendall(mystr.encode('UTF-8'))
+                            result = self.request.sendall(mystr+'\n'.encode('UTF-8'))
+                            if result == None:
+                                self.errlog('data sent successfully.')
+                            #result = self.request.sendall(mystr)
+                            #if result == None:
+                            #    self.errlog('data sent successfully again.')
                         elif 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'status':
                             pass # FIXME
                     elif 'action' in xmlroot.attrib.keys():
@@ -230,7 +237,8 @@ if __name__ == "__main__":
     os.chdir(smglobal.PROGRAM_PREFIX)
 
     # First Run, we should reset the note
-    smlibaction.smActionResetNote()
+    #smlibaction.smActionResetNote()
+    # FIXME COMMENTED OUT DUE TO POTENTIAL BUGS
 
     # Next, open a subprocess of mplayer for playing music
     smusicplayer.smGetMusicPipe()

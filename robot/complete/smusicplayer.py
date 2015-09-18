@@ -84,7 +84,8 @@ def smPlayMusicById(intid):
     if not found:
         return False
     conn.close()     # NOTE: should we make conn a global var?
-    return smPlayMusic(smglobal.ROBOT_MUSIC_PATH + i)
+    print('smPlayMusicById(): We got {}.'.format(i))
+    return smPlayMusic(smglobal.ROBOT_MUSIC_PATH + i[0])
 
 def smGetMusicList():
     """
@@ -100,6 +101,6 @@ def smGetMusicList():
         subelement.set('havenote', str(row[2]))
     conn.close()
 # TODO BUG HERE
-    return ET.tostring(xmlroot, pretty_print=False)
+    return ET.tostring(xmlroot)
 
 #  vim: set ts=8 sw=4 tw=0 et :
