@@ -53,7 +53,7 @@ def smPlayMusic(path):
 
     Should not be called directly.
     """
-    _smSendCommand('loadfile {}'.format(str))
+    _smSendCommand('loadfile {}'.format(path))
     return True
 
 def smStopMusic():
@@ -84,8 +84,9 @@ def smPlayMusicById(intid):
     if not found:
         return False
     conn.close()     # NOTE: should we make conn a global var?
-    print('smPlayMusicById(): We got {}.'.format(i))
-    return smPlayMusic(smglobal.ROBOT_MUSIC_PATH + i[0])
+    str_to_return = smglobal.ROBOT_MUSIC_PATH + i[0]
+    print('smPlayMusicById(): We got {}.'.format(str_to_return))
+    return smPlayMusic(str_to_return)
 
 def smGetMusicList():
     """
@@ -100,7 +101,6 @@ def smGetMusicList():
         subelement.set('filename', row[1])
         subelement.set('havenote', str(row[2]))
     conn.close()
-# TODO BUG HERE
     return ET.tostring(xmlroot)
 
 #  vim: set ts=8 sw=4 tw=0 et :
