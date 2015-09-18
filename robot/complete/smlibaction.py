@@ -13,6 +13,7 @@ import smglobal
 from smglobal import DEBUG
 import xml.etree.ElementTree as ET
 from keyboardplay import keyboard_data
+import smusicplayer
 
 def smActionResetNote():
     """
