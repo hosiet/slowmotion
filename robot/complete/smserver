@@ -196,9 +196,9 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                     if 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'get':
                         self.errlog('have action="get".')
                         if 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'list':
-                            str = smusicplayer.smGetMusicList()
-                            self.errlog('Will now send music list:{}.'.format(str))
-                            self.request.sendall(str.encode('UTF-8'))
+                            mystr = smusicplayer.smGetMusicList()
+                            self.errlog('Will now send music list:{}.'.format(mystr))
+                            self.request.sendall(mystr.encode('UTF-8'))
                         elif 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'status':
                             pass # FIXME
                     elif 'action' in xmlroot.attrib.keys():

@@ -95,10 +95,11 @@ def smGetMusicList():
     c = conn.cursor()
     for row in c.execute("SELECT * FROM musicdata ORDER BY id"):
         subelement = ET.SubElement(xmlroot, 'music')
-        subelement.set('id', row[0])
+        subelement.set('id', str(row[0]))
         subelement.set('filename', row[1])
-        subelement.set('havenote', row[2])
+        subelement.set('havenote', str(row[2]))
     conn.close()
-    return ET.dump(xmlroot)
+# TODO BUG HERE
+    return ET.tostring(xmlroot, pretty_print=False)
 
 #  vim: set ts=8 sw=4 tw=0 et :
