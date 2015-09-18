@@ -39,6 +39,7 @@ ROBOT_USERPLAY_TRANSACTION_HANDLER=None
 
 ## Set if it is debug
 DEBUG=True
+DEBUG=False
 
 ## END OF GLOBAL VARIABLES
 ##########################################################
