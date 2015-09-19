@@ -218,6 +218,14 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                         elif xmlroot.attrib['action'] == 'stop':
                             self.errlog('will now stop music.')
                             smusicplayer.smStopMusic()
+                    elif 'sound' in xmlroot.attrib.keys():
+                        # adjust sound big or small
+                        if xmlroot.attrib['sound'] == 'up':
+                            # sound up
+                            smusicplayer.smIncreaseMusicSound()
+                        elif xmlroot.attrib['sound'] == 'down':
+                            # sound down
+                            smusicplayer.smDecreaseMusicSound()
                     continue # FIXME is it correct?
                 else:
                     # TAG IS NOT MUSIC
