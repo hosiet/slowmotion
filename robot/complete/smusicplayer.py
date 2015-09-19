@@ -71,6 +71,14 @@ def smResumeMusic():
     _smSendCommand('pause')
     return
 
+def smIncreaseMusicSound():
+    _smSendCommand('0')
+    return
+
+def smDecreaseMusicSound():
+    _smSendCommand('9')
+    return
+
 def smPlayMusicById(intid):
     """
     Begin to play music according to given id.
