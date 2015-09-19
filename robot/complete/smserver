@@ -58,7 +58,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
     timeout = None;
 
     def errlog(self, logstr):
-        if DEBUG:
+        if True:#DEBUG:
             print(logstr, file=sys.stderr)
 
     # Override
@@ -72,7 +72,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
         while True:
 
             # {{{ Pre-formatting
-            self.errlog('Entering command parsing...')
+            self.errlog('Parsing cmd. STATUS: {}'.format(smglobal.ROBOT_STATUS))
             self.data = self.rfile.readline()                   # DO NOT REMOVE '\n'
             print("Data is {}.".format(self.data))
             if self.data == b'':                                # Connection reset by peer
@@ -84,11 +84,13 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             if self.data == b'\x1b':                            # ESC
                 break
             print("From {0}, Received: '{1}'.".format(self.client_address, self.data))
+            mydata = ""
             try:
                 mydata = self.data.decode('UTF-8') # 1-8
             except UnicodeDecodeError:                          # Not valid unicode(utf-8) input
                 print("UnicodeDecodeError happened!")
                 continue
+            self.errlog('Now the XML to parse is {}.'.format(mydata))
             # }}}
 
             ########################################################
@@ -105,13 +107,15 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             # No.1 action:reset note
             # Won't be run if in state:userplay or state:userplay_transaction
             if is_command_reset_note(xmlroot):
-                if smglobal.ROBOT_STATUS != 'USERPLAY' and smglobal.ROBOT_STATUS != 'USERPLAY_TRANSACTION':
+                if True:#smglobal.ROBOT_STATUS != 'USERPLAY' and smglobal.ROBOT_STATUS != 'USERPLAY_TRANSACTION':
+                    self.errlog('Will now reset note.')
                     smlibaction.smActionResetNote()
                 continue
 
             # No.2 action:reset all
             # Will always run
             if is_command_reset_all(xmlroot):
+                self.errlog("Received RESET_ALL command.")
                 smlibaction.smActionResetAll()
                 continue
 
@@ -131,7 +135,9 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                     and 'action' in xmlroot.attrib.keys() 
                     and xmlroot.attrib['action'] == 'get status'):
                 xmlroot = ET.Element('response').set('status', smglobal.ROBOT_STATUS)
-                self.request.sendall(ET.dump(xmlroot).encode('UTF-8'))
+                result = self.request.sendall(ET.dump(xmlroot).encode('UTF-8'))
+                if result == None:
+                    self.errlog('data sent successfully.')
                 continue
 
             ###### }}}
@@ -139,7 +145,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             ### {{{ Parse commands 1 'STANDBY'; Able to change status
 
             # No.1 'STANDBY'
-            if is_status_standby():
+            if False:#is_status_standby():
                 if is_command_userplay(xmlroot):
                     smglobal.ROBOT_STATUS = "USERPLAY"
                     self.errlog('Now enter USERPLAY mode.')
@@ -160,18 +166,19 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             ### {{{ Parse commands 2 'USERPLAY'
 
             # No.2 'USERPLAY'
-            if is_status_userplay():
+            self.errlog('before the parse of noteplay.')
+            if True:#is_status_userplay():
                 if is_command_note_single(xmlroot):
-                    keyboardplay.kp_play_note_once(int(xmlroot.attrib['note']))
+                    keyboardplay.kp_play_note_once(xmlroot.attrib['note'])
                 else:
-                    self.errlog('NOW IN USERPLAY, BUT COMMAND NOT FOUND')
-                continue
+                    #self.errlog('NOW IN USERPLAY, BUT COMMAND NOT FOUND')
+                    pass
 
             ### }}}
             ### {{{ Parse commands 3 'USERPLAY_TRANSACTION'
 
             # No.3 'USERPLAY_TRANSACTION'
-            if is_status_userplay_transaction():
+            if False:#is_status_userplay_transaction():
                 'only one single line will be received, which is the song(note) to be played.'
                 if xmlroot.tag == 'transaction':
                     try:
@@ -184,27 +191,39 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             ### {{{ Parse commands 4 'MUSIC'
 
             # No.4 'MUSIC'
-            if is_status_music():
+            self.errlog('will try the music area.')
+            if True:#is_status_music():
                 if xmlroot.tag == 'music':
+                    self.errlog('xmlroot.tag is music.')
                     if 'action' in xmlroot.attrib.keys() and xmlroot.attrib['action'] == 'get':
+                        self.errlog('have action="get".')
                         if 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'list':
-                            str = smusicplayer.smGetMusicList()
-                            self.request.sendall(str.encode('UTF-8'))
+                            mystr = smusicplayer.smGetMusicList()
+                            self.errlog('Will now send music list:{}.'.format(mystr))
+                            result = self.request.sendall(mystr+'\n'.encode('UTF-8'))
+                            if result == None:
+                                self.errlog('data sent successfully.')
+                            #result = self.request.sendall(mystr)
+                            #if result == None:
+                            #    self.errlog('data sent successfully again.')
                         elif 'type' in xmlroot.attrib.keys() and xmlroot.attrib['type'] == 'status':
                             pass # FIXME
                     elif 'action' in xmlroot.attrib.keys():
                         if xmlroot.attrib['action'] == 'play' and 'which' in xmlroot.attrib.keys():
+                            self.errlog('Will now play music of {}.'.format(int(xmlroot.attrib['which'])))
                             smusicplayer.smPlayMusicById(int(xmlroot.attrib['which']))
                         elif xmlroot.attrib['action'] == 'pause':
+                            self.errlog('will now pause music.')
                             smusicplayer.smPauseMusic()
                         elif xmlroot.attrib['action'] == 'stop':
+                            self.errlog('will now stop music.')
                             smusicplayer.smStopMusic()
                     continue # FIXME is it correct?
                 else:
                     # TAG IS NOT MUSIC
                     pass
 
-        self.errlog('COMMAND NOT CAUGHT, NOT CONTINUEING')
+        self.errlog('COMMAND NOT CAUGHT, NOT CONTINUEING.')
 
          ### }}}
 
@@ -218,7 +237,8 @@ if __name__ == "__main__":
     os.chdir(smglobal.PROGRAM_PREFIX)
 
     # First Run, we should reset the note
-    smlibaction.smActionResetNote()
+    #smlibaction.smActionResetNote()
+    # FIXME COMMENTED OUT DUE TO POTENTIAL BUGS
 
     # Next, open a subprocess of mplayer for playing music
     smusicplayer.smGetMusicPipe()

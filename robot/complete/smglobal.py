@@ -35,10 +35,11 @@ ROBOT_SONG_PATH='./smusic/song/'
 
 
 ## USERPLAY_TRANSACTION PlayableNote Handler
-ROBOT_USERPLAY_TRANSACTON_HANDLER=None
+ROBOT_USERPLAY_TRANSACTION_HANDLER=None
 
 ## Set if it is debug
 DEBUG=True
+DEBUG=False
 
 ## END OF GLOBAL VARIABLES
 ##########################################################
