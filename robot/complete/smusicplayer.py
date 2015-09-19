@@ -72,11 +72,11 @@ def smResumeMusic():
     return
 
 def smIncreaseMusicSound():
-    _smSendCommand('0')
+    _smSendCommand('volume 3')
     return
 
 def smDecreaseMusicSound():
-    _smSendCommand('9')
+    _smSendCommand('volume 0')
     return
 
 def smPlayMusicById(intid):
