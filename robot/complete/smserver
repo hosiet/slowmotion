@@ -233,11 +233,11 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                         if xmlroot.attrib['loop'] == 'yes':
                             # enable loop
                             self.errlog('Loop Enabled.')
-                            smusicplayer._smSendCommand('loop 0')
+                            smusicplayer._smSendCommand('loop 999')
                         elif xmlroot.attrib['loop'] == 'no':
                             # disable loop
                             self.errlog('Loop Disabled.')
-                            smusicplayer._smSendCommand('loop -1')
+                            smusicplayer._smSendCommand('loop -999')
                     continue # FIXME is it correct?
                 else:
                     # TAG IS NOT MUSIC
