@@ -226,6 +226,14 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                         elif xmlroot.attrib['sound'] == 'down':
                             # sound down
                             smusicplayer.smDecreaseMusicSound()
+                    elif 'loop' in xmlroot.attrib.keys():
+                        # set loop or not
+                        if xmlroot.attrib['loop'] == 'yes':
+                            # enable loop
+                            smusicplayer._smSendCommand('loop 0')
+                        elif xmlroot.attrib['loop'] == 'no':
+                            # disable loop
+                            smusicplayer._smSendCommand('loop -1')
                     continue # FIXME is it correct?
                 else:
                     # TAG IS NOT MUSIC
