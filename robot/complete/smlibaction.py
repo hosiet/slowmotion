@@ -44,10 +44,10 @@ def smActionResetAll():
 
         smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER = None
 
-    # Third Step: Stop and clear the MUSIC handler, if exists
+    # Third Step: Stop and reset the MUSIC handler, if exists
     if smglobal.ROBOT_MUSIC_HANDLER != None:
         smusicplayer.smStopMusicPipe()
-        smglobal.ROBOT_MUSIC_HANDLER = None
+        smglobal.ROBOT_MUSIC_HANDLER = smusicplayer.smGetMusicPipe()
 
     # Finally we switch the status to standby
     smglobal.ROBOT_STATUS = "STANDBY"

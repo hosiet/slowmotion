@@ -32,7 +32,7 @@ def smGetMusicPipe():
     """
     smMusic = subprocess.Popen(['mplayer', '-slave', '-idle'], stdout=subprocess.PIPE,
               stdin=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    smglobal.ROBOT_MUSIC_HANDLER = smMusic # NOT NECESSARY
+    smglobal.ROBOT_MUSIC_HANDLER = smMusic # Needed
     return smMusic
 
 def smStopMusicPipe():
