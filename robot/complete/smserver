@@ -222,17 +222,21 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
                         # adjust sound big or small
                         if xmlroot.attrib['sound'] == 'up':
                             # sound up
+                            self.errlog('Will Volume Up.')
                             smusicplayer.smIncreaseMusicSound()
                         elif xmlroot.attrib['sound'] == 'down':
                             # sound down
+                            self.errlog('Will Volume Down.')
                             smusicplayer.smDecreaseMusicSound()
                     elif 'loop' in xmlroot.attrib.keys():
                         # set loop or not
                         if xmlroot.attrib['loop'] == 'yes':
                             # enable loop
+                            self.errlog('Loop Enabled.')
                             smusicplayer._smSendCommand('loop 0')
                         elif xmlroot.attrib['loop'] == 'no':
                             # disable loop
+                            self.errlog('Loop Disabled.')
                             smusicplayer._smSendCommand('loop -1')
                     continue # FIXME is it correct?
                 else:
