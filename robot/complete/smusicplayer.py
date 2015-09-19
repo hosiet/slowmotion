@@ -30,8 +30,8 @@ def smGetMusicPipe():
 
     Should be called when the smserver starts.
     """
-    smMusic = subprocess.Popen(['mplayer', '-slave', '-idle'], stdout=subprocess.PIPE,
-              stdin=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    smMusic = subprocess.Popen(['mplayer', '-slave', '-idle'], stdout=subprocess.DEVNULL,
+              stdin=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
     smglobal.ROBOT_MUSIC_HANDLER = smMusic # Needed
     return smMusic
 
