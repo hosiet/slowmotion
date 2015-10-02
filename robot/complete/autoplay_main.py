@@ -1,35 +1,38 @@
+#!/usr/bin/env python3
+
 import sqlite3
 import sched, time
 import threading
-#import keyboardplay
 
-conn=sqlite3.connect("smusic/new.db")
-c=conn.cursor()
-for x in c.execute("SELECT time,note FROM music"):
-    pass
-t=x[0].split()
-w=x[1].split()
-conn.close()
+import keyboardplay
+import smglobal
+from smglobal import DEBUG
 
-def kp_play_note_once(inputnote):
-	#os.system('echo {0}={1} >> /dev/pi-blaster'.format(keyboardplay.keyboard_data[inputnote]['gpio'], keyboardplay.keyboard_data[inputnote]['low']))
-	print(inputnote)
-def strike_():
-    s = sched.scheduler(time.time, time.sleep)
-    count=-1
-    for i in t:
-        count+=1
-        floatnumber = float(t[count])
-        s.enter(floatnumber, 1,kp_play_note_once,argument=(w[count],))
-    s.run()
-
-class start_strike(threading.Thread):
+class StrikeThread(threading.Thread):
     def __init__(self):
-        threading.Thread.__init__(self)
+        super().__init__(self)
+        self.conn = sqlite3.connect("smusic/new.db")
+
+    def _strike(self):
+        c = self.conn.cursor()
+        for x in c.execute("SELECT time, note FROM music;"):
+            break
+        t = x[0].split()
+        w = x[1].split()
+        self.conn.close()
+        s = sched.scheduler(time.time, time.sleep)
+        count = -1
+        for i in t:
+            count += 1
+            floatnumber = float(t[count])
+            s.enter(floatnumber, 1, keyboardplay.kp_play_note_once, argument=(w[count], ))
+        s.run()
+
     def run(self):
-        strike_()
+        self._strike()
+
 def test():
-    thread1 = start_strike()
+    thread1 = StrikeThread()
     thread1.start()
     thread1.join()
 
