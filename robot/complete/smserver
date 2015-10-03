@@ -18,6 +18,7 @@ import smlibaction
 import smusicplayer
 import smplayfile
 import keyboardplay
+import autoplay_main
 
 # {{{ Some convenient functions
 def is_command_reset_note(xmlroot):
@@ -178,14 +179,21 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             ### {{{ Parse commands 3 'USERPLAY_TRANSACTION'
 
             # No.3 'USERPLAY_TRANSACTION'
-            if False:#is_status_userplay_transaction():
-                'only one single line will be received, which is the song(note) to be played.'
-                if xmlroot.tag == 'transaction':
-                    try:
-                        smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER = smplayfile.PlayableNote(mydata)
-                        smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER.play()
-                    except:
-                        raise
+            # OK. This is for real and for `autoplay' work.
+            # <autoplay num="W"/>
+            if (xmlroot.tag == 'autoplay'
+                    and 'num' in xmlroot.attrib.keys()):
+                strikeThread = autoplay_main.StrikeThread(int(xmlroot.attrib['num']))
+                strikeThread.start()
+
+#            if False:#is_status_userplay_transaction():
+#                'only one single line will be received, which is the song(note) to be played.'
+#                if xmlroot.tag == 'transaction':
+#                    try:
+#                        smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER = smplayfile.PlayableNote(mydata)
+#                        smglobal.ROBOT_USERPLAY_TRANSACTION_HANDLER.play()
+#                    except:
+#                        raise
 
             ### }}}
             ### {{{ Parse commands 4 'MUSIC'
