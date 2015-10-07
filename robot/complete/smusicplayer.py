@@ -99,6 +99,8 @@ def smPlayMusicById(intid):
 def smGetMusicList():
     """
     Return all valid music list as XML data str.
+
+    And also the autoplay part of the music.
     """
     xmlroot = ET.Element('musiclist')
     conn = sqlite3.connect(smglobal.ROBOT_MUSIC_DB)
@@ -108,6 +110,10 @@ def smGetMusicList():
         subelement.set('id', str(row[0]))
         subelement.set('filename', row[1])
         subelement.set('havenote', str(row[2]))
+    for row in c.execute("SELECT id,name FROM music ORDER BY id;"):
+        subelement = ET.SubElement(xmlroot, 'automusic')
+        subelement.set('id', str(row[0]))
+        subelement.set('name', str(row[1]))
     conn.close()
     return ET.tostring(xmlroot)
 

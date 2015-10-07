@@ -33,6 +33,7 @@ class StrikeThread(threading.Thread):
         if not found:
             # Given number not found.
             # TODO ERROR LOGGING
+            print('ID not found! not doing anything.')
             return
         t = x[0].split()
         w = x[1].split()
