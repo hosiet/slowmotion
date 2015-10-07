@@ -184,7 +184,9 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             if (xmlroot.tag == 'autoplay'
                     and 'num' in xmlroot.attrib.keys()):
                 strikeThread = autoplay_main.StrikeThread(int(xmlroot.attrib['num']))
+                print('Yes, we are playing autoplay function!')
                 strikeThread.start()
+                break
 
 #            if False:#is_status_userplay_transaction():
 #                'only one single line will be received, which is the song(note) to be played.'
