@@ -92,7 +92,7 @@ def smPlayMusicById(intid):
     if not found:
         return False
     conn.close()     # NOTE: should we make conn a global var?
-    str_to_return = smglobal.ROBOT_MUSIC_PATH + i[0]
+    str_to_return = smglobal.ROBOT_MUSIC_PATH + i[0] + '.mp3'
     print('smPlayMusicById(): We got {}.'.format(str_to_return))
     return smPlayMusic(str_to_return)
 
