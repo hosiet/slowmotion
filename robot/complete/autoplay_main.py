@@ -18,13 +18,13 @@ class StrikeThread(threading.Thread):
     """
     def __init__(self, autoplay_id):
         super().__init__(self)
-        self.conn = sqlite3.connect("smusic/musiclist.db")
         self.autoplay_id = autoplay_id;
 
     def _strike(self):
         """
         Actually do the strike work.
         """
+        self.conn = sqlite3.connect("smusic/musiclist.db")
         c = self.conn.cursor()
         found = False
         for x in c.execute("SELECT time, note FROM music WHERE id=?;", (self.autoplay_id, )):
