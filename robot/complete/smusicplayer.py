@@ -106,6 +106,8 @@ def smGetMusicList():
     conn = sqlite3.connect(smglobal.ROBOT_MUSIC_DB)
     c = conn.cursor()
     for row in c.execute("SELECT * FROM musicdata ORDER BY id"):
+        if row[1] == 'startup' or row[1] == 'shutdown':
+            continue
         subelement = ET.SubElement(xmlroot, 'music')
         subelement.set('id', str(row[0]))
         subelement.set('filename', row[1])

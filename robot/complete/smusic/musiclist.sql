@@ -16,6 +16,8 @@ INSERT INTO "musicdata" VALUES(null,'节奏一',0);
 INSERT INTO "musicdata" VALUES(null,'节奏二',0);
 INSERT INTO "musicdata" VALUES(null,'节奏三',0);
 INSERT INTO "musicdata" VALUES(null,'节奏四',0);
+INSERT INTO "musicdata" VALUES(null,'startup',0);
+INSERT INTO "musicdata" VALUES(null,'startup',0);
 CREATE TABLE music (
 id INTEGER PRIMARY KEY,
 name TEXT NOT NULL,
