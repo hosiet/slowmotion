@@ -11,6 +11,7 @@ INSERT INTO "musicdata" VALUES(null,'年轻的战场',0);
 INSERT INTO "musicdata" VALUES(null,'光荣啊中国共青团',0);
 INSERT INTO "musicdata" VALUES(null,'困兽之斗',0);
 INSERT INTO "musicdata" VALUES(null,'最炫民族风',0);
+INSERT INTO "musicdata" VALUES(null,'青春修炼手册',0);
 INSERT INTO "musicdata" VALUES(null,'节奏一',0);
 INSERT INTO "musicdata" VALUES(null,'节奏二',0);
 INSERT INTO "musicdata" VALUES(null,'节奏三',0);
