@@ -126,14 +126,14 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
 
             # No.3 action:poweroff or action:reboot
             if is_command_poweroff(xmlroot):
-                smlibaction.smActionResetAll()
                 smusicplayer.smPlayMusicById(2)
+                smlibaction.smActionResetAll()
                 smlibaction.smPowerOff()
                 sys.exit(0)
 
             if is_command_reboot(xmlroot):
-                smlibaction.smActionResetAll()
                 smusicplayer.smPlayMusicById(2)
+                smlibaction.smActionResetAll()
                 smlibaction.smReboot()
                 sys.exit(0)
 
@@ -262,7 +262,7 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
         self.errlog('COMMAND NOT CAUGHT, NOT CONTINUEING.')
 
          ### }}}
-
+        smusicplayer.smPlayMusicById(2)
         print('Connection closed by me.')
         return
 
