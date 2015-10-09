@@ -70,6 +70,10 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
         Using XML as data format.
         """
         self.errlog('New connection accepted.')
+
+        # Startup Music!
+        smusicplayer.smPlayMusicById(1)
+
         while True:
 
             # {{{ Pre-formatting
@@ -123,11 +127,13 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             # No.3 action:poweroff or action:reboot
             if is_command_poweroff(xmlroot):
                 smlibaction.smActionResetAll()
+                smusicplayer.smPlayMusicById(2)
                 smlibaction.smPowerOff()
                 sys.exit(0)
 
             if is_command_reboot(xmlroot):
                 smlibaction.smActionResetAll()
+                smusicplayer.smPlayMusicById(2)
                 smlibaction.smReboot()
                 sys.exit(0)
 

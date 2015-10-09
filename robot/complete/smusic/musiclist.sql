@@ -6,6 +6,8 @@ CREATE TABLE musicdata (
 id INTEGER PRIMARY KEY,
 filename TEXT NOT NULL,
 havenote INTEGER NOT NULL);
+INSERT INTO "musicdata" VALUES(null,'startup',0);
+INSERT INTO "musicdata" VALUES(null,'shutdown',0);
 INSERT INTO "musicdata" VALUES(null,'年轻的战场',0);
 --INSERT INTO "musicdata" VALUES(null,'光荣啊中国共青团(young).mp3',0);
 INSERT INTO "musicdata" VALUES(null,'光荣啊中国共青团',0);
@@ -16,8 +18,6 @@ INSERT INTO "musicdata" VALUES(null,'节奏一',0);
 INSERT INTO "musicdata" VALUES(null,'节奏二',0);
 INSERT INTO "musicdata" VALUES(null,'节奏三',0);
 INSERT INTO "musicdata" VALUES(null,'节奏四',0);
-INSERT INTO "musicdata" VALUES(null,'startup',0);
-INSERT INTO "musicdata" VALUES(null,'startup',0);
 CREATE TABLE music (
 id INTEGER PRIMARY KEY,
 name TEXT NOT NULL,
