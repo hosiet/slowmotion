@@ -11,6 +11,7 @@ This Socketserver shall act as the main process for the entire project.
 import os, sys
 import socketserver
 import xml.etree.ElementTree as ET
+import time
 
 import smglobal
 from smglobal import DEBUG
@@ -127,12 +128,14 @@ class MyTCPInfoHandler(socketserver.StreamRequestHandler):
             # No.3 action:poweroff or action:reboot
             if is_command_poweroff(xmlroot):
                 smusicplayer.smPlayMusicById(2)
+                time.sleep(10)
                 smlibaction.smActionResetAll()
                 smlibaction.smPowerOff()
                 sys.exit(0)
 
             if is_command_reboot(xmlroot):
                 smusicplayer.smPlayMusicById(2)
+                time.sleep(10)
                 smlibaction.smActionResetAll()
                 smlibaction.smReboot()
                 sys.exit(0)
