@@ -19,12 +19,11 @@ def smActionResetNote():
     """
     Reset 8 notes of the robot.
     """
-    if DEBUG == True:
-        print('smActionResetNote(): Will reset note, passing.', file=sys.stderr)
-        return
-    for i in ['1', '2', '3', '4', '5', '6', '7', '0']:
+    print('smActionResetNote(): Will now reset notes.')
+    for i in ['1', '2', '3', '4', '5', '6', '7', '8']:
         os.system('echo {0}={1} >> /dev/pi-blaster'.format(keyboard_data[i]['gpio'], keyboard_data[i]['high']))
-        time.sleep(0.2)
+        time.sleep(0.3)
+    print('smActionResetNote(): Note reset complete.')
 
 def smActionResetAll():
     """

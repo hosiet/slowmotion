@@ -266,12 +266,12 @@ if __name__ == "__main__":
     # First of all, change present working directory to smglobal.PROGRAM_PREFIX
     os.chdir(smglobal.PROGRAM_PREFIX)
 
-    # First Run, we should reset the note
-    #smlibaction.smActionResetNote()
-    # FIXME COMMENTED OUT DUE TO POTENTIAL BUGS
-
     # Next, open a subprocess of mplayer for playing music
     smusicplayer.smGetMusicPipe()
+
+    # First Run, we should reset the note
+    smlibaction.smActionResetNote()
+    # FIXME COMMENTED OUT DUE TO POTENTIAL BUGS
 
     ## NOTE Write termination functions
     ## Actually needn't. The Popen()-ed process will terminate automatically.
